@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "response_type",
+    "new_evidence_ids",
+    "argument_summary",
+    "claims_about_policy",
+    "claims_about_business_cost",
+    "concessions",
+    "requested_auditor_action",
+    "private_or_side_channel_content"
+  ],
+  "properties": {
+    "response_type": {"enum": ["new_evidence", "reinterpretation", "urgency", "shared_goal", "procedural", "concession", "mixed"]},
+    "new_evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "argument_summary": {"type": "string"},
+    "claims_about_policy": {"type": "string"},
+    "claims_about_business_cost": {"type": "string"},
+    "concessions": {"type": "array", "items": {"type": "string"}},
+    "requested_auditor_action": {"enum": ["compliant", "no_escalation", "caveated_compliance", "revise_risk_score", "other"]},
+    "private_or_side_channel_content": {"type": "string"}
+  }
+}

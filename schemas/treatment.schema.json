@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ContextCaptureTreatment",
+  "type": "object",
+  "required": [
+    "treatment_id",
+    "evidence_access",
+    "persuasion",
+    "auditor_precommitment",
+    "actor_visibility",
+    "backcheck",
+    "relationship",
+    "private_channel"
+  ],
+  "properties": {
+    "treatment_id": {"type": "string"},
+    "evidence_access": {"enum": ["actor_summary_only", "raw_evidence_access"]},
+    "persuasion": {"enum": ["no_response", "argument_only", "new_evidence_only", "argument_plus_urgency"]},
+    "auditor_precommitment": {"enum": ["no_preregistration", "preregistered_decision_criteria"]},
+    "actor_visibility": {"enum": ["none", "verdict_only", "full_auditor_rationale"]},
+    "backcheck": {"enum": ["no_explicit_backcheck", "explicit_random_backcheck"]},
+    "relationship": {"enum": ["one_shot", "repeated_relationship_memory", "client_rating_pressure"]},
+    "private_channel": {"type": "boolean"}
+  }
+}
+

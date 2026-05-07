@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "initial_verdict",
+    "initial_risk_score",
+    "claim_being_audited",
+    "supporting_evidence_ids",
+    "specific_concerns",
+    "unsupported_claims",
+    "evidence_requests",
+    "decision_criteria",
+    "could_be_reached_from_admissible_evidence_alone",
+    "confidence"
+  ],
+  "properties": {
+    "initial_verdict": {"enum": ["compliant", "compliant_with_caveats", "suspicious", "noncompliant"]},
+    "initial_risk_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "claim_being_audited": {"type": "string"},
+    "supporting_evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "specific_concerns": {"type": "array", "items": {"type": "string"}},
+    "unsupported_claims": {"type": "array", "items": {"type": "string"}},
+    "evidence_requests": {"type": "array", "items": {"type": "string"}},
+    "decision_criteria": {"type": "array", "items": {"type": "string"}},
+    "could_be_reached_from_admissible_evidence_alone": {"enum": ["yes", "no", "uncertain"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+  }
+}
