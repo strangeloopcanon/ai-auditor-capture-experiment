@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SourceNotePacket",
+  "type": "object",
+  "required": ["case_id", "domain", "source_notes", "case_blueprint"],
+  "properties": {
+    "source_note_schema_version": {"type": "string"},
+    "source_packet_id": {"type": "string"},
+    "case_id": {"type": "string"},
+    "domain": {"type": "string"},
+    "source_notes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "source_note_id",
+          "source_type",
+          "source_title",
+          "source_locator",
+          "source_date",
+          "excerpt",
+          "sensitivity"
+        ],
+        "properties": {
+          "source_note_id": {"type": "string"},
+          "source_type": {
+            "enum": ["public_policy", "public_process", "public_metric", "private_document", "synthetic_extension"]
+          },
+          "source_title": {"type": "string"},
+          "source_locator": {"type": "string"},
+          "source_date": {"type": "string"},
+          "excerpt": {"type": "string"},
+          "sensitivity": {"enum": ["public", "private", "synthetic"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "case_blueprint": {
+      "type": "object",
+      "description": "Existing ContextCaptureCase fields before case_id/domain/provenance are attached."
+    }
+  },
+  "additionalProperties": true
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import random
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -175,6 +176,13 @@ def append_jsonl(path: Path, data: Any) -> None:
         handle.write(json.dumps(data, sort_keys=True) + "\n")
 
 
+def repo_display_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def call_record(
     *,
     run_id: str,
@@ -197,8 +205,8 @@ def call_record(
         "channel": channel,
         "visible_context_hash": hash_text(stable_json(context)),
         "prompt_hash": hash_text(prompt),
-        "output_path": str(output_path),
-        "schema_path": str(schema_path),
+        "output_path": repo_display_path(output_path),
+        "schema_path": repo_display_path(schema_path),
     }
 
 
@@ -548,6 +556,7 @@ def aggregate_metrics(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
 def assign_balanced_stratified(
     cases: list[dict[str, Any]],
     treatments: list[dict[str, Any]],
+    seed: int | None = None,
 ) -> list[tuple[dict[str, Any], dict[str, Any]]]:
     """Assign one treatment per case while balancing hidden strata.
 
@@ -558,20 +567,27 @@ def assign_balanced_stratified(
     if not treatments:
         raise ValueError("At least one treatment is required.")
 
-    base = len(cases) // len(treatments)
-    remainder = len(cases) % len(treatments)
-    treatment_ids = [treatment["treatment_id"] for treatment in treatments]
+    ordered_cases = list(cases)
+    ordered_treatments = list(treatments)
+    if seed is not None:
+        rng = random.Random(seed)
+        rng.shuffle(ordered_cases)
+        rng.shuffle(ordered_treatments)
+
+    base = len(ordered_cases) // len(ordered_treatments)
+    remainder = len(ordered_cases) % len(ordered_treatments)
+    treatment_ids = [treatment["treatment_id"] for treatment in ordered_treatments]
     target_counts = {
         treatment_id: base + (1 if i < remainder else 0)
         for i, treatment_id in enumerate(treatment_ids)
     }
     assigned_counts = {treatment_id: 0 for treatment_id in treatment_ids}
     stratum_counts: dict[tuple[str, str, str], int] = {}
-    treatment_by_id = {treatment["treatment_id"]: treatment for treatment in treatments}
+    treatment_by_id = {treatment["treatment_id"]: treatment for treatment in ordered_treatments}
 
     assignments: list[tuple[dict[str, Any], dict[str, Any]]] = []
 
-    for case in cases:
+    for case in ordered_cases:
         stratum = (case["domain"], case["ground_truth_label"]["archetype"])
         candidates = [
             treatment_id
@@ -606,6 +622,7 @@ def run_experiment(
     dry_run: bool,
     execute: bool,
     assignment: str = "all_conditions",
+    assignment_seed: int | None = None,
 ) -> dict[str, Any]:
     if dry_run and execute:
         raise ValueError("Use either dry_run or execute, not both.")
@@ -620,8 +637,10 @@ def run_experiment(
 
     if assignment == "all_conditions":
         work_items = [(case, treatment) for case in cases for treatment in treatments]
+        if assignment_seed is not None:
+            random.Random(assignment_seed).shuffle(work_items)
     elif assignment == "balanced-stratified":
-        work_items = assign_balanced_stratified(cases, treatments)
+        work_items = assign_balanced_stratified(cases, treatments, seed=assignment_seed)
     else:
         raise ValueError(f"Unknown assignment mode: {assignment}")
 
@@ -636,6 +655,7 @@ def run_experiment(
                 "domain": case["domain"],
                 "archetype": case["ground_truth_label"]["archetype"],
                 "treatment_id": treatment["treatment_id"],
+                "assignment_seed": assignment_seed,
             },
         )
 

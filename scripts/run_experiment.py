@@ -24,6 +24,7 @@ def main() -> None:
     parser.add_argument("--condition", action="append", dest="conditions")
     parser.add_argument("--actor-model")
     parser.add_argument("--auditor-model")
+    parser.add_argument("--assignment-seed", type=int)
     parser.add_argument("--include-appeals-judge", action="store_true")
     parser.add_argument(
         "--assignment",
@@ -58,6 +59,7 @@ def main() -> None:
         dry_run=args.dry_run,
         execute=args.execute,
         assignment=args.assignment,
+        assignment_seed=args.assignment_seed,
     )
     print(json.dumps(metrics, indent=2, sort_keys=True))
 

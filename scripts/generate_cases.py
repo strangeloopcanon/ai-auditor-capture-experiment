@@ -12,7 +12,9 @@ if str(ROOT) not in sys.path:
 from auditor_capture.case_generation import (
     generate_borderline_cases,
     generate_cases,
+    generate_cases_from_source_notes,
     generate_locked_stress_cases,
+    load_source_note_packets,
     write_jsonl,
 )
 
@@ -21,10 +23,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--cases-per-domain", type=int, default=50)
-    parser.add_argument("--mode", choices=["standard", "locked-stress", "borderline"], default="standard")
+    parser.add_argument(
+        "--mode",
+        choices=["standard", "locked-stress", "borderline", "source-notes"],
+        default="standard",
+    )
+    parser.add_argument("--source-notes", type=Path)
     args = parser.parse_args()
 
-    if args.mode == "locked-stress":
+    if args.mode == "source-notes":
+        if args.source_notes is None:
+            parser.error("--source-notes is required when --mode source-notes")
+        cases = generate_cases_from_source_notes(load_source_note_packets(args.source_notes))
+    elif args.mode == "locked-stress":
         cases = generate_locked_stress_cases(args.cases_per_domain)
     elif args.mode == "borderline":
         cases = generate_borderline_cases(args.cases_per_domain)

@@ -1,6 +1,18 @@
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
-from auditor_capture.case_generation import DOMAINS, generate_borderline_cases, generate_cases, generate_locked_stress_cases
+from auditor_capture.case_generation import (
+    DOMAINS,
+    generate_borderline_cases,
+    generate_cases,
+    generate_cases_from_source_notes,
+    generate_locked_stress_cases,
+    load_source_note_packets,
+)
+
+SOURCE_NOTES_FIXTURE = Path("data/source_notes/source_grounded_integrity_stress_25.json")
 
 
 class CaseGenerationTests(unittest.TestCase):
@@ -39,6 +51,34 @@ class CaseGenerationTests(unittest.TestCase):
             self.assertEqual(case["action_options"], [action])
             self.assertEqual(case["support_rules"][action]["default_support_label"], "weakly_supported")
             self.assertEqual(case["ground_truth_label"]["justification_support_target"], "weakly_supported")
+
+    def test_source_note_generation_preserves_provenance(self) -> None:
+        packets = load_source_note_packets(SOURCE_NOTES_FIXTURE)
+        cases = generate_cases_from_source_notes(packets)
+        self.assertEqual(len(cases), 25)
+        case = cases[0]
+        self.assertEqual(case["case_id"], "source_model_card_stale_approval_001")
+        self.assertEqual(case["generation_lane"], "source_notes")
+        self.assertIn("source_provenance", case)
+        self.assertEqual(case["source_provenance"]["schema_version"], "v1")
+        self.assertGreaterEqual(case["source_provenance"]["source_note_count"], 1)
+        for evidence in case["admissible_evidence"] + case["inadmissible_or_private_evidence"]:
+            self.assertIn("source_note_ids", evidence)
+            self.assertTrue(evidence["source_note_ids"])
+
+    def test_source_note_generation_rejects_unknown_source_note_ids(self) -> None:
+        packets = load_source_note_packets(SOURCE_NOTES_FIXTURE)
+        packets[0]["case_blueprint"]["admissible_evidence"][0]["source_note_ids"] = ["missing"]
+        with self.assertRaises(ValueError):
+            generate_cases_from_source_notes(packets)
+
+    def test_source_note_loader_accepts_jsonl(self) -> None:
+        packets = load_source_note_packets(SOURCE_NOTES_FIXTURE)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "source_notes.jsonl"
+            path.write_text(json.dumps(packets[0]) + "\n", encoding="utf-8")
+            loaded = load_source_note_packets(path)
+        self.assertEqual(loaded[0]["case_id"], "source_model_card_stale_approval_001")
 
 
 if __name__ == "__main__":

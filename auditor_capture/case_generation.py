@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 from typing import Any
 
@@ -624,6 +625,153 @@ def generate_borderline_cases(cases_per_domain: int = 50) -> list[dict[str, Any]
             builder = BORDERLINE_BUILDERS[domain]
             cases.append(builder(i))
     return cases
+
+
+SOURCE_NOTE_PACKET_REQUIRED_FIELDS = ("case_id", "domain", "source_notes", "case_blueprint")
+SOURCE_NOTE_REQUIRED_FIELDS = (
+    "source_note_id",
+    "source_type",
+    "source_title",
+    "source_locator",
+    "source_date",
+    "excerpt",
+    "sensitivity",
+)
+SOURCE_BLUEPRINT_REQUIRED_FIELDS = (
+    "decision_question",
+    "policy_text",
+    "action_options",
+    "admissible_evidence",
+    "inadmissible_or_private_evidence",
+    "ground_truth_label",
+    "support_rules",
+    "temptation_strength",
+    "ambiguity_level",
+    "business_pressure_level",
+    "audit_difficulty",
+)
+SOURCE_EVIDENCE_REQUIRED_FIELDS = ("evidence_id", "title", "text", "source_note_ids")
+
+
+def _stable_hash(data: Any) -> str:
+    payload = json.dumps(data, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _require_fields(data: dict[str, Any], required: tuple[str, ...], label: str) -> None:
+    missing = [field for field in required if field not in data]
+    if missing:
+        raise ValueError(f"{label} missing required fields: {', '.join(missing)}")
+
+
+def _validate_source_evidence(
+    evidence_items: list[dict[str, Any]],
+    *,
+    known_source_note_ids: set[str],
+    label: str,
+) -> None:
+    for evidence in evidence_items:
+        evidence_id = evidence.get("evidence_id", "<missing evidence_id>")
+        _require_fields(evidence, SOURCE_EVIDENCE_REQUIRED_FIELDS, f"{label} evidence {evidence_id}")
+        source_note_ids = evidence["source_note_ids"]
+        if not isinstance(source_note_ids, list) or not source_note_ids:
+            raise ValueError(f"{label} evidence {evidence_id} must cite at least one source_note_id")
+        unknown = sorted(set(source_note_ids) - known_source_note_ids)
+        if unknown:
+            raise ValueError(
+                f"{label} evidence {evidence_id} cites unknown source_note_ids: {', '.join(unknown)}"
+            )
+
+
+def validate_source_note_packet(packet: dict[str, Any]) -> None:
+    _require_fields(packet, SOURCE_NOTE_PACKET_REQUIRED_FIELDS, "source-note packet")
+    if not isinstance(packet["source_notes"], list) or not packet["source_notes"]:
+        raise ValueError(f"source-note packet {packet['case_id']} must include at least one source note")
+    if not isinstance(packet["case_blueprint"], dict):
+        raise ValueError(f"source-note packet {packet['case_id']} case_blueprint must be an object")
+
+    seen_note_ids: set[str] = set()
+    for note in packet["source_notes"]:
+        _require_fields(note, SOURCE_NOTE_REQUIRED_FIELDS, f"source note in packet {packet['case_id']}")
+        note_id = note["source_note_id"]
+        if note_id in seen_note_ids:
+            raise ValueError(f"duplicate source_note_id in packet {packet['case_id']}: {note_id}")
+        seen_note_ids.add(note_id)
+
+    blueprint = packet["case_blueprint"]
+    _require_fields(blueprint, SOURCE_BLUEPRINT_REQUIRED_FIELDS, f"case_blueprint {packet['case_id']}")
+    for field in ("admissible_evidence", "inadmissible_or_private_evidence"):
+        if not isinstance(blueprint[field], list):
+            raise ValueError(f"case_blueprint {packet['case_id']} field {field} must be a list")
+    _validate_source_evidence(
+        blueprint["admissible_evidence"],
+        known_source_note_ids=seen_note_ids,
+        label=f"case_blueprint {packet['case_id']} admissible",
+    )
+    _validate_source_evidence(
+        blueprint["inadmissible_or_private_evidence"],
+        known_source_note_ids=seen_note_ids,
+        label=f"case_blueprint {packet['case_id']} private",
+    )
+
+
+def case_from_source_note_packet(packet: dict[str, Any]) -> dict[str, Any]:
+    validate_source_note_packet(packet)
+    case = dict(packet["case_blueprint"])
+    if case.get("case_id") and case["case_id"] != packet["case_id"]:
+        raise ValueError(f"case_blueprint case_id does not match packet case_id: {packet['case_id']}")
+    if case.get("domain") and case["domain"] != packet["domain"]:
+        raise ValueError(f"case_blueprint domain does not match packet domain: {packet['case_id']}")
+    case["case_id"] = packet["case_id"]
+    case["domain"] = packet["domain"]
+    case["generation_lane"] = "source_notes"
+    source_notes = []
+    for note in packet["source_notes"]:
+        source_notes.append(
+            {
+                "source_note_id": note["source_note_id"],
+                "source_type": note["source_type"],
+                "source_title": note["source_title"],
+                "source_locator": note["source_locator"],
+                "source_date": note["source_date"],
+                "sensitivity": note["sensitivity"],
+                "content_hash": _stable_hash(note),
+            }
+        )
+    used_note_ids = sorted(
+        {
+            source_note_id
+            for evidence in case["admissible_evidence"] + case["inadmissible_or_private_evidence"]
+            for source_note_id in evidence["source_note_ids"]
+        }
+    )
+    case["source_provenance"] = {
+        "schema_version": packet.get("source_note_schema_version", "v1"),
+        "source_packet_id": packet.get("source_packet_id", packet["case_id"]),
+        "source_note_count": len(source_notes),
+        "used_source_note_ids": used_note_ids,
+        "source_notes": source_notes,
+    }
+    return case
+
+
+def generate_cases_from_source_notes(source_note_packets: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [case_from_source_note_packet(packet) for packet in source_note_packets]
+
+
+def load_source_note_packets(path: Path) -> list[dict[str, Any]]:
+    text = path.read_text(encoding="utf-8").strip()
+    if not text:
+        return []
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        parsed = None
+    if isinstance(parsed, list):
+        return parsed
+    if isinstance(parsed, dict):
+        return [parsed]
+    return load_jsonl(path)
 
 
 def write_jsonl(cases: list[dict[str, Any]], output: Path) -> None:

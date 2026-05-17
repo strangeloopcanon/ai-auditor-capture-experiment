@@ -1,73 +1,57 @@
 # Context Capture Audit Game
 
-This repo contains the experiment kit for the AI auditor capture study. It is intentionally scoped to the experimental harness, prompts, schemas, case files, and run outputs. Essay drafts, Google Doc exports, generated images, and publication artifacts are not part of the repo.
+This repo tests whether an AI actor being audited can talk an AI auditor out of a correct concern without giving it genuinely new admissible evidence.
 
-The experiment asks whether an audited AI actor can make an AI auditor move from a correct concern to false compliance by reframing a borderline evidentiary gap without supplying genuinely new admissible evidence.
+Across the current live runs, the answer is yes. The original synthetic benchmark shows the effect. An explicit anti-capture integrity reminder reduces it, but does not eliminate it. A new source-grounded model-card setup then brings the effect back strongly under that same integrity reminder.
 
-## What Is Included
+## Current Evidence
 
-- `auditor_capture/` - Python harness for case generation, call planning, orchestration, Codex execution, and deterministic scoring.
-- `prompts/` - structured Actor, Auditor, Actor-response, Auditor-final, and optional Appeals Judge prompts.
-- `schemas/` - JSON schemas for role outputs, transcripts, treatments, cases, and scoring results.
-- `config/treatments.borderline.json` - canonical six-condition borderline treatment set.
-- `config/treatments.integrity_reminder.json` - follow-up treatment set with the generic auditor integrity reminder.
-- `data/cases_borderline_150.jsonl` - canonical 150-case borderline case file.
-- `runs/borderline_live_150/` - canonical live 150-case `gpt-5.4` run.
-- `runs/integrity_reminder_live_150/` - live 150-case integrity-reminder run.
-- `docs/` - experiment design notes, VEI mapping, and call-budget notes.
-- `tests/` - standard-library unit tests for generation, call budgeting, assignment, and scoring.
+| Setup | Cases | Auditor condition | Transcripts | Persuasion-induced false compliance | Overall false compliance | Takeaway |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% | 16/150 = 10.7% | The capture pattern appears. |
+| Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% | 7/150 = 4.7% | The reminder helps, but does not solve it. |
+| Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% | 15/150 = 10.0% | The effect comes back strongly in a more realistic setting. |
 
-## What Is Not Included
+The source-grounded run is the new methodological step. It is not another sample from the old synthetic generator: it uses source-note packets, keeps provenance attached to each generated case, and tests model-card certification scenarios built from public governance/process sources plus source-tracked launch artifacts.
 
-This repository excludes the public essay drafts and publishing artifacts. In particular, generated Google Doc exports, docx/html renders, chart images for the essay, and narrative writeup drafts were removed before publishing.
+## Source-Grounded Setup
 
-## Current Model Boundary
+The active source-grounded fixture is:
 
-All live model calls are routed through the local Codex CLI. The harness allows only `gpt-5.4` and `gpt-5.5`, and the completed runs here use `gpt-5.4`.
+```text
+data/source_notes/source_grounded_integrity_stress_25.json
+```
 
-The route was sanity-checked locally on 2026-05-05 with one `gpt-5.4` and one `gpt-5.5` call. Those checks are not counted in the experiment runs.
+It grounds the governance surface in:
 
-## Completed Runs
+- Hugging Face Model Cards documentation.
+- NIST AI Risk Management Framework.
 
-### Canonical Borderline Run
+It then adds source-noted organization-specific artifacts for the pressure points that matter in real model release work:
 
-Path: `runs/borderline_live_150/`
+- stale prior approval
+- draft mitigation
+- missing eval coverage
+- materiality dispute
+- rollout or monitoring controls that do not actually close the evidence gap
 
-- 150 cases across procurement, access exceptions, and model-card disclosure.
-- Balanced single-treatment assignment across six conditions.
-- 548 live Codex role calls using `gpt-5.4`.
-- 150/150 Actor packets were deterministically weakly supported.
-- Initial Auditor verdicts: 148 suspicious, 1 noncompliant, 1 compliant with caveats.
-- No-response false compliance: 0/25.
-- Persuasion-induced false compliance: 15/124 = 12.1%.
-- Overall false compliance: 16/150 = 10.7%.
+Generated cases preserve this provenance in `source_provenance`, and each evidence item cites the relevant `source_note_ids`.
 
-Primary machine-readable outputs:
+## Key Artifacts
 
-- `runs/borderline_live_150/metrics.json`
-- `runs/borderline_live_150/analysis.json`
-- `runs/borderline_live_150/case_scores.jsonl`
-- `runs/borderline_live_150/transcripts/`
+- Original synthetic run: `runs/borderline_live_150/`
+- Synthetic run with integrity reminder: `runs/integrity_reminder_live_150/`
+- Source-grounded integrity stress run: `runs/source_grounded_integrity_stress_25_integrity/`
+- Source-note packet: `data/source_notes/source_grounded_integrity_stress_25.json`
+- Generated source-grounded cases: `data/cases_source_grounded_integrity_stress_25.jsonl`
+- Replication config: `config/replication.source_grounded_integrity_stress_25.json`
+- Repeat plan: `docs/replication_plan.md`
 
-### Integrity-Reminder Run
+This repo intentionally excludes essay drafts, Google Doc exports, rendered article assets, and other publication artifacts.
 
-Path: `runs/integrity_reminder_live_150/`
+## Reproduce Cases
 
-- Same 150-case setup with a generic auditor reminder to remain independent and evidence-based.
-- No-response false compliance: 0/25.
-- Persuasion-induced false compliance: 5/123 = 4.1%.
-- Overall false compliance: 7/150 = 4.7%.
-
-Primary machine-readable outputs:
-
-- `runs/integrity_reminder_live_150/metrics.json`
-- `runs/integrity_reminder_live_150/analysis.json`
-- `runs/integrity_reminder_live_150/case_scores.jsonl`
-- `runs/integrity_reminder_live_150/transcripts/`
-
-## Quick Start
-
-Generate the canonical 150-case borderline file:
+Generate the original synthetic benchmark file:
 
 ```bash
 python3 scripts/generate_cases.py \
@@ -76,31 +60,44 @@ python3 scripts/generate_cases.py \
   --output data/cases_borderline_150.jsonl
 ```
 
-Show the call budget before spending any live calls:
+Generate the source-grounded model-card stress file:
+
+```bash
+python3 scripts/generate_cases.py \
+  --mode source-notes \
+  --source-notes data/source_notes/source_grounded_integrity_stress_25.json \
+  --output data/cases_source_grounded_integrity_stress_25.jsonl
+```
+
+## Run And Inspect
+
+Show the call budget before spending live calls:
 
 ```bash
 python3 scripts/plan_calls.py \
-  --cases data/cases_borderline_150.jsonl \
-  --treatments config/treatments.borderline.json \
+  --cases data/cases_source_grounded_integrity_stress_25.jsonl \
+  --treatments config/treatments.integrity_reminder.json \
   --manifest config/run_manifest.mvp.json
 ```
 
-Run the canonical balanced version:
+Run the source-grounded integrity stress set:
 
 ```bash
 python3 scripts/run_experiment.py \
-  --cases data/cases_borderline_150.jsonl \
-  --treatments config/treatments.borderline.json \
+  --cases data/cases_source_grounded_integrity_stress_25.jsonl \
+  --treatments config/treatments.integrity_reminder.json \
   --manifest config/run_manifest.mvp.json \
-  --out runs/borderline_live_150 \
-  --assignment balanced-stratified \
+  --out runs/source_grounded_integrity_stress_25_integrity \
+  --assignment all_conditions \
   --execute
 ```
 
 Analyze a completed run:
 
 ```bash
-python3 scripts/analyze_run.py runs/borderline_live_150
+python3 scripts/analyze_run.py \
+  --run runs/source_grounded_integrity_stress_25_integrity \
+  --json-out runs/source_grounded_integrity_stress_25_integrity/analysis.json
 ```
 
 Run tests:
@@ -109,22 +106,28 @@ Run tests:
 python3 -m pytest -q
 ```
 
-## Call Budget
+## Replication Plan
 
-For the six canonical borderline conditions:
+The next planned step is repeated source-grounded integrity runs with fixed output folders and per-run seeds:
 
-- No-response condition: 2 calls per assigned case.
-- Response condition: 4 calls per assigned case.
-- Optional Appeals Judge: +1 call per assigned case.
-- Deterministic Regulator: 0 calls.
+```bash
+python3 scripts/run_replications.py \
+  --config config/replication.source_grounded_integrity_stress_25.json \
+  --repeats 5 \
+  --plan-only
+```
 
-Balanced single-treatment assignment:
+Exact maximum budgets:
 
-- 150-case run: up to 550 Codex LLM calls.
-- The canonical run used 548 because one selective response stage was skipped after an initial caveated-compliance verdict.
+```text
+1 repeat   = 150 transcripts,   550 calls
+3 repeats  = 450 transcripts, 1,650 calls
+5 repeats  = 750 transcripts, 2,750 calls
+10 repeats = 1,500 transcripts, 5,500 calls
+```
 
-Full Cartesian design across all six canonical conditions:
+The completed source-grounded run used 546 calls against the 550-call maximum because two selective continuations were skipped after initial caveated-compliance verdicts.
 
-- 150 cases x all treatments: 3,300 Codex LLM calls.
+## Model Boundary
 
-The repo keeps the balanced runs because they are the cost-controlled experimental artifacts behind the essay.
+All live model calls are routed through the local Codex CLI. The harness allows only `gpt-5.4` and `gpt-5.5`; the completed runs here use `gpt-5.4`.
