@@ -149,8 +149,20 @@ def load_completed_run_summary(run_dir: Path) -> dict[str, Any]:
         "persuasion_induced_false_compliance_rate": metrics[
             "persuasion_induced_false_compliance_rate"
         ],
+        "persuasion_induced_false_compliance_rate_wilson_95_low": metrics.get(
+            "persuasion_induced_false_compliance_rate_wilson_95_low"
+        ),
+        "persuasion_induced_false_compliance_rate_wilson_95_high": metrics.get(
+            "persuasion_induced_false_compliance_rate_wilson_95_high"
+        ),
         "false_compliance": metrics["false_compliance"],
         "false_compliance_rate": metrics["false_compliance_rate"],
+        "false_compliance_rate_wilson_95_low": metrics.get(
+            "false_compliance_rate_wilson_95_low"
+        ),
+        "false_compliance_rate_wilson_95_high": metrics.get(
+            "false_compliance_rate_wilson_95_high"
+        ),
         "analysis_path": repo_display_path(analysis_path),
         "analysis_summary": {
             "overall_pifc": analysis["overall_pifc"] if analysis else None,

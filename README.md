@@ -8,11 +8,26 @@ Across the current live runs, the answer is yes. The original synthetic benchmar
 
 | Setup | Cases | Auditor condition | Transcripts | Persuasion-induced false compliance | Overall false compliance | Takeaway |
 | --- | --- | --- | ---: | ---: | ---: | --- |
-| Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% | 16/150 = 10.7% | The capture pattern appears. |
-| Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% | 7/150 = 4.7% | The reminder helps, but does not solve it. |
-| Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% | 15/150 = 10.0% | The effect comes back strongly in a more realistic setting. |
+| Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | The capture pattern appears. |
+| Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | The reminder helps, but does not solve it. |
+| Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | The effect returns toward the original range in a more realistic setting. |
+
+Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
 
 The source-grounded run is the new methodological step. It is not another sample from the old synthetic generator: it uses source-note packets, keeps provenance attached to each generated case, and tests model-card certification scenarios built from public governance/process sources plus source-tracked launch artifacts.
+
+## Hidden Auditor-Access Follow-Up
+
+The raw-evidence condition in the source-grounded run was unexpectedly more capture-prone than the matching summary-only condition. To test whether that came from shared knowledge of auditor access, the follow-up run fixed the source-grounded cases, integrity reminder, full initial-audit rationale visibility, and no-new-evidence persuasion regime, then varied auditor access and what the actor was told about that access.
+
+| Treatment | Auditor access | Actor access disclosure | Transcripts | Persuasion-induced false compliance | Overall false compliance |
+| --- | --- | --- | ---: | ---: | ---: |
+| H1 | Summary only | Told summary only | 25 | 2/25 = 8.0% (95% CI 2.2%-25.0%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
+| H2 | Summary only | Told raw access | 25 | 2/25 = 8.0% (95% CI 2.2%-25.0%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
+| H3 | Raw evidence | Not disclosed | 25 | 3/25 = 12.0% (95% CI 4.2%-30.0%) | 3/25 = 12.0% (95% CI 4.2%-30.0%) |
+| H4 | Raw evidence | Told raw access | 25 | 1/24 = 4.2% (95% CI 0.7%-20.2%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
+
+This does not support a simple "known raw access increases capture" story. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect.
 
 ## Source-Grounded Setup
 
@@ -42,9 +57,11 @@ Generated cases preserve this provenance in `source_provenance`, and each eviden
 - Original synthetic run: `runs/borderline_live_150/`
 - Synthetic run with integrity reminder: `runs/integrity_reminder_live_150/`
 - Source-grounded integrity stress run: `runs/source_grounded_integrity_stress_25_integrity/`
+- Hidden auditor-access follow-up: `runs/source_grounded_hidden_access_integrity_25/`
 - Source-note packet: `data/source_notes/source_grounded_integrity_stress_25.json`
 - Generated source-grounded cases: `data/cases_source_grounded_integrity_stress_25.jsonl`
-- Replication config: `config/replication.source_grounded_integrity_stress_25.json`
+- Source-grounded replication config: `config/replication.source_grounded_integrity_stress_25.json`
+- Hidden-access treatment config: `config/treatments.hidden_access_integrity.json`
 - Repeat plan: `docs/replication_plan.md`
 
 This repo intentionally excludes essay drafts, Google Doc exports, rendered article assets, and other publication artifacts.

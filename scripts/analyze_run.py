@@ -5,13 +5,14 @@ import argparse
 import json
 import sys
 from collections import Counter
-from math import sqrt
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+from auditor_capture.stats import rate_summary
 
 
 def load_transcripts(run_dir: Path) -> list[dict[str, Any]]:
@@ -21,27 +22,6 @@ def load_transcripts(run_dir: Path) -> list[dict[str, Any]]:
 
 def event_outputs(transcript: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {event["stage"]: event["output"] for event in transcript["events"]}
-
-
-def wilson_interval(successes: int, total: int, z: float = 1.96) -> tuple[float, float]:
-    if total == 0:
-        return (0.0, 0.0)
-    p = successes / total
-    denom = 1 + z * z / total
-    centre = (p + z * z / (2 * total)) / denom
-    margin = z * sqrt((p * (1 - p) + z * z / (4 * total)) / total) / denom
-    return (max(0.0, centre - margin), min(1.0, centre + margin))
-
-
-def rate_row(successes: int, total: int) -> dict[str, Any]:
-    low, high = wilson_interval(successes, total)
-    return {
-        "count": successes,
-        "n": total,
-        "rate": successes / total if total else 0.0,
-        "wilson_95_low": low,
-        "wilson_95_high": high,
-    }
 
 
 def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
@@ -83,8 +63,8 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
         by_treatment[treatment] = {
             "cases": len(subset),
             "continued_cases": len(continued_subset),
-            "pifc": rate_row(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
-            "false_compliance": rate_row(sum(row["false_compliance"] for row in subset), len(subset)),
+            "pifc": rate_summary(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
+            "false_compliance": rate_summary(sum(row["false_compliance"] for row in subset), len(subset)),
             "final_verdict_counts": dict(Counter(row["final"] for row in subset)),
         }
 
@@ -95,8 +75,8 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
         by_domain[domain] = {
             "cases": len(subset),
             "continued_cases": len(continued_subset),
-            "pifc": rate_row(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
-            "false_compliance": rate_row(sum(row["false_compliance"] for row in subset), len(subset)),
+            "pifc": rate_summary(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
+            "false_compliance": rate_summary(sum(row["false_compliance"] for row in subset), len(subset)),
             "final_verdict_counts": dict(Counter(row["final"] for row in subset)),
         }
 
@@ -110,9 +90,9 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
         "action_counts": dict(Counter(row["action"] for row in rows)),
         "treatment_counts": dict(Counter(row["treatment_id"] for row in rows)),
         "domain_counts": dict(Counter(row["domain"] for row in rows)),
-        "overall_pifc": rate_row(len(pifc), len(continued)),
-        "overall_false_compliance": rate_row(sum(row["false_compliance"] for row in rows), len(rows)),
-        "no_response_false_compliance": rate_row(sum(row["false_compliance"] for row in no_response), len(no_response)),
+        "overall_pifc": rate_summary(len(pifc), len(continued)),
+        "overall_false_compliance": rate_summary(sum(row["false_compliance"] for row in rows), len(rows)),
+        "no_response_false_compliance": rate_summary(sum(row["false_compliance"] for row in no_response), len(no_response)),
         "by_treatment": by_treatment,
         "by_domain": by_domain,
         "pifc_cases": [row for row in rows if row["pifc"]],
@@ -121,6 +101,13 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
 
 def format_pct(value: float) -> str:
     return f"{100 * value:.1f}%"
+
+
+def format_rate_with_ci(row: dict[str, Any]) -> str:
+    return (
+        f"{format_pct(row['rate'])}, Wilson 95% CI "
+        f"{format_pct(row['wilson_95_low'])}-{format_pct(row['wilson_95_high'])}"
+    )
 
 
 def markdown_report(run_dir: Path, summary: dict[str, Any]) -> str:
@@ -136,16 +123,15 @@ def markdown_report(run_dir: Path, summary: dict[str, Any]) -> str:
         "",
         (
             f"Persuasion-induced false compliance: {pifc['count']}/{pifc['n']} "
-            f"({format_pct(pifc['rate'])}, Wilson 95% CI "
-            f"{format_pct(pifc['wilson_95_low'])}-{format_pct(pifc['wilson_95_high'])})."
+            f"({format_rate_with_ci(pifc)})."
         ),
         (
             f"False compliance overall: {false_compliance['count']}/{false_compliance['n']} "
-            f"({format_pct(false_compliance['rate'])})."
+            f"({format_rate_with_ci(false_compliance)})."
         ),
         (
             f"No-response false compliance: {no_response['count']}/{no_response['n']} "
-            f"({format_pct(no_response['rate'])})."
+            f"({format_rate_with_ci(no_response)})."
         ),
         "",
         "## Counts",
