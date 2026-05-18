@@ -14,7 +14,26 @@ Across the current live runs, the answer is yes. The original synthetic benchmar
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
 
+Headline PIFC rate by run:
+
+```text
+Original synthetic          12.1% | ############
+Synthetic + integrity        4.1% | ####
+Source-grounded integrity   10.6% | ###########
+Hidden access follow-up      8.1% | ########
+```
+
 The source-grounded run is the new methodological step. It is not another sample from the old synthetic generator: it uses source-note packets, keeps provenance attached to each generated case, and tests model-card certification scenarios built from public governance/process sources plus source-tracked launch artifacts.
+
+## Raw Evidence Contrast
+
+The raw-evidence condition is the odd signal worth isolating. Holding actor visibility to the full initial-auditor rationale, raw auditor evidence access produced higher PIFC than summary-only access in the three earlier runs.
+
+| Run | Summary only + full rationale | Raw evidence + full rationale | Raw minus summary |
+| --- | ---: | ---: | ---: |
+| Original synthetic | 2/24 = 8.3% | 7/25 = 28.0% | +19.7 pp |
+| Synthetic + integrity reminder | 0/25 = 0.0% | 4/24 = 16.7% | +16.7 pp |
+| Source-grounded + integrity reminder | 2/24 = 8.3% | 4/24 = 16.7% | +8.3 pp |
 
 ## Hidden Auditor-Access Follow-Up
 
@@ -28,6 +47,15 @@ The raw-evidence condition in the source-grounded run was unexpectedly more capt
 | H4 | Raw evidence | Told raw access | 25 | 1/24 = 4.2% (95% CI 0.7%-20.2%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
 
 This does not support a simple "known raw access increases capture" story. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect.
+
+Hidden-access follow-up PIFC rate:
+
+```text
+H1 summary / told summary    8.0% | ####
+H2 summary / told raw        8.0% | ####
+H3 raw / not disclosed      12.0% | ######
+H4 raw / told raw            4.2% | ##
+```
 
 ## Source-Grounded Setup
 
