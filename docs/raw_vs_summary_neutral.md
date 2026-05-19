@@ -1,6 +1,6 @@
 # Raw-vs-Summary Neutral-Disclosure A/B
 
-This follow-up tests the direct raw-vs-summary question:
+This study tests the direct raw-vs-summary access contrast:
 
 > Holding actor access disclosure fixed, does auditor raw-evidence access reduce or increase persuasion-induced false compliance relative to summary-only auditor access?
 
@@ -33,4 +33,4 @@ The paired case comparison points in the same direction:
 
 The result supports the counterintuitive raw-evidence vulnerability observed in earlier runs. In this design, raw evidence did not simply make the auditor stricter. With full rationale visibility and no-new-evidence persuasion, raw-evidence access produced more false compliance than summary-only access.
 
-The separate raw-access actor-knowledge A/B tests a different mechanism: whether telling the actor about raw auditor access changes the outcome when the auditor has raw access in both arms. That result is directional but not conclusive, and it does not explain away the raw-vs-summary effect.
+The separate raw-access actor-knowledge A/B tests a different mechanism: whether telling the actor about raw auditor access changes the outcome when the auditor has raw access in both arms. That result is directional but not conclusive, and it does not account for the raw-vs-summary effect.

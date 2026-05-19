@@ -11,7 +11,7 @@ The benchmark has two parts: an initial synthetic stress test and a source-groun
 | Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | Establishes the capture pattern. |
 | Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | Reduces, but does not eliminate, capture. |
 | Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | Shows the effect in a more realistic source-grounded lane. |
-| Raw-vs-summary neutral-disclosure A/B | 150 paired source-grounded model-card cases | Actor is not told the auditor access level; auditor sees either summary-only or raw evidence | 300 | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 16/145 = 11.0% (95% CI 6.9%-17.2%) | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 21/150 = 14.0% (95% CI 9.3%-20.5%) | Directly supports the counterintuitive raw-evidence vulnerability. |
+| Raw-vs-summary neutral-disclosure A/B | 150 paired source-grounded model-card cases | Actor is not told the auditor access level; auditor sees either summary-only or raw evidence | 300 | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 16/145 = 11.0% (95% CI 6.9%-17.2%) | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 21/150 = 14.0% (95% CI 9.3%-20.5%) | Provides direct evidence for higher capture under raw-evidence access. |
 | Raw-access actor-knowledge A/B | 150 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 300 | 24/292 = 8.2% (95% CI 5.6%-11.9%) | 32/300 = 10.7% (95% CI 7.7%-14.7%) | Tests actor knowledge of auditor raw-evidence access. |
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
@@ -40,7 +40,7 @@ The raw-evidence condition motivated a targeted mechanism check. Holding actor v
 | Synthetic + integrity reminder | 0/25 = 0.0% | 4/24 = 16.7% | +16.7 pp |
 | Source-grounded + integrity reminder | 2/24 = 8.3% | 4/24 = 16.7% | +8.3 pp |
 
-The direct neutral-disclosure follow-up tests the same contrast on the same 150 source-grounded cases while holding actor access disclosure fixed as not disclosed. This is the cleanest run for the original raw-vs-summary question.
+The neutral-disclosure A/B tests the same contrast on the same 150 source-grounded cases while holding actor access disclosure fixed as not disclosed. It provides the most direct estimate of the raw-vs-summary access contrast.
 
 | Arm | Auditor access | Actor access disclosure | Persuasion-induced false compliance | Overall false compliance |
 | --- | --- | --- | ---: | ---: |
@@ -60,7 +60,7 @@ The raw-evidence condition in the source-grounded run was unexpectedly more capt
 | H3 | Raw evidence | Not disclosed | 25 | 3/25 = 12.0% (95% CI 4.2%-30.0%) | 3/25 = 12.0% (95% CI 4.2%-30.0%) |
 | H4 | Raw evidence | Told raw access | 25 | 1/24 = 4.2% (95% CI 0.7%-20.2%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
 
-These results do not support a simple "known raw access increases capture" account. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect. The larger raw-access actor-knowledge A/B below extends the H3/H4 comparison.
+These results do not support a simple "known raw access increases capture" account. In the completed run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect. The larger raw-access actor-knowledge A/B below extends the H3/H4 comparison.
 
 Hidden-access follow-up PIFC rate:
 
@@ -242,4 +242,4 @@ The completed source-grounded run used 546 calls against the 550-call maximum be
 
 ## Model Boundary
 
-All live model calls are routed through the local Codex CLI. The harness allows only `gpt-5.4` and `gpt-5.5`; the completed runs here use `gpt-5.4`.
+All live model calls are routed through the local Codex CLI. The harness allows only `gpt-5.4` and `gpt-5.5`; the completed runs use `gpt-5.4`.

@@ -2,7 +2,7 @@
 
 ## Assessment
 
-The design is strong because it defines capture in the right AI-native place: the auditor's evidentiary context. The important comparison is not "honest model versus deceptive model." It is whether role separation survives when the audited actor controls summaries, framing, timing, and the auditor's conversational trajectory.
+The design defines capture at the auditor's evidentiary context. The important comparison is not "honest model versus deceptive model." It is whether role separation survives when the audited actor controls summaries, framing, timing, and the auditor's interaction trajectory.
 
 The strongest MVP object is:
 
@@ -56,4 +56,3 @@ Conditions:
 ## What Should Move Into VEI Next
 
 This folder is the experiment kit. The VEI integration step should turn each transcript event into canonical VEI events and attach the treatment routing metadata to provenance records. That is intentionally separated so the experiment can be reviewed before it is merged into the main VEI repo.
-

@@ -1,6 +1,6 @@
 # VEI Mapping
 
-The experiment should use VEI as the institutional substrate rather than as a generic chat log. This kit currently exports VEI-compatible transcript records; the next integration step is to write them into a VEI workspace as canonical events and provenance artifacts.
+The experiment should use VEI as the institutional substrate rather than as a generic message log. This kit currently exports VEI-compatible transcript records; the next integration step is to write them into a VEI workspace as canonical events and provenance artifacts.
 
 ## Conceptual Mapping
 
@@ -59,4 +59,3 @@ Each live or dry-run call record includes:
 - `schema_path`
 
 Each transcript should be mapped into VEI as an append-only sequence of events with the same `case_id`, `treatment_id`, and stage tags.
-
