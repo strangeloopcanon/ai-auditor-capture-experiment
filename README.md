@@ -11,7 +11,7 @@ The benchmark has two parts: an initial synthetic stress test and a source-groun
 | Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | Establishes the capture pattern. |
 | Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | Reduces, but does not eliminate, capture. |
 | Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | Shows the effect in a more realistic source-grounded lane. |
-| Raw-access actor-knowledge A/B | 75 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 150 | 11/147 = 7.5% (95% CI 4.2%-12.9%) | 14/150 = 9.3% (95% CI 5.7%-15.1%) | Isolates actor knowledge of auditor raw-evidence access. |
+| Raw-access actor-knowledge A/B | 150 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 300 | 24/292 = 8.2% (95% CI 5.6%-11.9%) | 32/300 = 10.7% (95% CI 7.7%-14.7%) | Tests actor knowledge of auditor raw-evidence access. |
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
 
@@ -22,7 +22,7 @@ Original synthetic          12.1% | ############
 Synthetic + integrity        4.1% | ####
 Source-grounded integrity   10.6% | ###########
 Hidden access follow-up      8.1% | ########
-Raw-access A/B               7.5% | ########
+Raw-access A/B               8.2% | ########
 ```
 
 The source-grounded run is the new methodological step. It is not another sample from the old synthetic generator: it uses source-note packets, keeps provenance attached to each generated case, and tests model-card certification scenarios built from public governance/process sources plus source-tracked launch artifacts.
@@ -61,7 +61,7 @@ H4 raw / told raw            4.2% | ##
 
 ## Raw-Access Actor-Knowledge A/B
 
-The focused A/B keeps auditor raw-evidence access fixed and varies only whether the actor is told that the auditor has raw access. It reuses the completed H3/H4 lanes from the hidden-access run, adds 25 new source-grounded cases to reach 50 paired cases, then adds another 25 source-grounded cases for a 75-case paired read.
+The focused A/B keeps auditor raw-evidence access fixed and varies only whether the actor is told that the auditor has raw access. It reuses the completed H3/H4 lanes from the hidden-access run, then adds source-grounded extensions for 50, 75, and 150 paired-case reads.
 
 | Run | Treatment | Actor told auditor has raw evidence? | Transcripts | Persuasion-induced false compliance | Overall false compliance |
 | --- | --- | --- | ---: | ---: | ---: |
@@ -69,14 +69,16 @@ The focused A/B keeps auditor raw-evidence access fixed and varies only whether 
 | 50 paired cases | H4 raw / told raw | Yes | 50 | 1/48 = 2.1% (95% CI 0.4%-10.9%) | 3/50 = 6.0% (95% CI 2.1%-16.2%) |
 | 75 paired cases | H3 raw / not disclosed | No | 75 | 9/74 = 12.2% (95% CI 6.5%-21.5%) | 10/75 = 13.3% (95% CI 7.4%-22.8%) |
 | 75 paired cases | H4 raw / told raw | Yes | 75 | 2/73 = 2.7% (95% CI 0.8%-9.5%) | 4/75 = 5.3% (95% CI 2.1%-12.9%) |
+| 150 paired cases | H3 raw / not disclosed | No | 150 | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
+| 150 paired cases | H4 raw / told raw | Yes | 150 | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
 
-The result supports a narrower mechanism signal: in this source-grounded setup, the actor is less successful when it knows the auditor can inspect raw evidence. The observed 75-case difference is 9.4 percentage points (12.2% versus 2.7%), with an approximate two-proportion 95% interval of 1.1 to 17.8 percentage points. Because the event count remains small, this should be treated as evidence of a mechanism rather than a final effect-size estimate.
+The 150-case extension preserves the direction of the actor-knowledge effect but attenuates its size. At 150 paired cases, hidden raw access produces 5.6 percentage points more PIFC than disclosed raw access (11.0% versus 5.4%), with an approximate two-proportion 95% interval of -0.7 to 11.9 percentage points. This supports a mechanism hypothesis but is not a conclusive stand-alone estimate of the effect size.
 
-Raw-access A/B PIFC rate at 75 paired cases:
+Raw-access A/B PIFC rate at 150 paired cases:
 
 ```text
-H3 raw / not disclosed      12.2% | ############
-H4 raw / told raw            2.7% | ###
+H3 raw / not disclosed      11.0% | ###########
+H4 raw / told raw            5.4% | #####
 ```
 
 ## Source-Grounded Setup
@@ -108,10 +110,10 @@ Generated cases preserve this provenance in `source_provenance`, and each eviden
 - Synthetic run with integrity reminder: `runs/integrity_reminder_live_150/`
 - Source-grounded integrity stress run: `runs/source_grounded_integrity_stress_25_integrity/`
 - Hidden auditor-access follow-up: `runs/source_grounded_hidden_access_integrity_25/`
-- Raw-access actor-knowledge A/B: `runs/source_grounded_raw_access_ab_50/`, `runs/source_grounded_raw_access_ab_75/`
+- Raw-access actor-knowledge A/B: `runs/source_grounded_raw_access_ab_50/`, `runs/source_grounded_raw_access_ab_75/`, `runs/source_grounded_raw_access_ab_150/`
 - Source-note packet: `data/source_notes/source_grounded_integrity_stress_25.json`
 - Generated source-grounded cases: `data/cases_source_grounded_integrity_stress_25.jsonl`
-- Generated raw-access A/B cases: `data/cases_source_grounded_raw_access_ab_75.jsonl`
+- Generated raw-access A/B cases: `data/cases_source_grounded_raw_access_ab_150.jsonl`
 - Source-grounded replication config: `config/replication.source_grounded_integrity_stress_25.json`
 - Hidden-access treatment config: `config/treatments.hidden_access_integrity.json`
 - Raw-access A/B treatment config: `config/treatments.raw_access_ab_integrity.json`
@@ -144,12 +146,12 @@ Generate the focused raw-access A/B case files:
 ```bash
 python3 scripts/build_raw_access_ab_cases.py \
   --base-source-notes data/source_notes/source_grounded_integrity_stress_25.json \
-  --extension-source-notes data/source_notes/source_grounded_raw_access_ab_extension_50.json \
-  --combined-source-notes data/source_notes/source_grounded_raw_access_ab_75.json \
-  --extension-cases data/cases_source_grounded_raw_access_ab_extension_50.jsonl \
-  --combined-cases data/cases_source_grounded_raw_access_ab_75.jsonl \
+  --extension-source-notes data/source_notes/source_grounded_raw_access_ab_extension_125.json \
+  --combined-source-notes data/source_notes/source_grounded_raw_access_ab_150.json \
+  --extension-cases data/cases_source_grounded_raw_access_ab_extension_125.jsonl \
+  --combined-cases data/cases_source_grounded_raw_access_ab_150.jsonl \
   --start-index 6 \
-  --end-index 15
+  --end-index 30
 ```
 
 ## Run And Inspect
