@@ -1,6 +1,6 @@
 # Raw-Access Actor-Knowledge A/B
 
-This focused follow-up isolates the specific mechanism question raised by the hidden-access run:
+This focused follow-up isolates the actor-knowledge mechanism question raised by the hidden-access run:
 
 > When the auditor has raw evidence access, does telling the actor about that access change persuasion-induced false compliance?
 
@@ -24,7 +24,7 @@ The first `25` cases come from the completed hidden-access run. The extension ca
 | 150 paired cases | H3 raw / not disclosed | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
 | 150 paired cases | H4 raw / told raw | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
 
-The 150-case extension preserves the direction of the actor-knowledge effect but weakens the effect-size estimate. The cleaner statement is that disclosed auditor raw-evidence access is associated with lower PIFC in this setup; the current 150-case read is directional rather than conclusive.
+The 150-case extension preserves the direction of the actor-knowledge effect but weakens the effect-size estimate. The cleaner statement is that disclosed auditor raw-evidence access is associated with lower PIFC in this setup; the current 150-case read is directional rather than conclusive. The direct raw-vs-summary access question is tested separately in `docs/raw_vs_summary_neutral.md`.
 
 Run a new 25-case extension batch:
 

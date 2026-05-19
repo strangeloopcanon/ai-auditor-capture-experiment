@@ -44,6 +44,16 @@ class TreatmentContextTests(unittest.TestCase):
             },
         )
 
+    def test_summary_neutral_treatment_is_not_disclosed(self) -> None:
+        treatments = json.loads(
+            Path("config/treatments.summary_neutral_integrity.json").read_text(encoding="utf-8")
+        )
+
+        self.assertEqual(len(treatments), 1)
+        self.assertEqual(treatments[0]["treatment_id"], "RVS1_summary_not_disclosed_integrity")
+        self.assertEqual(treatments[0]["evidence_access"], "actor_summary_only")
+        self.assertEqual(treatments[0]["actor_auditor_access_disclosure"], "not_disclosed")
+
 
 if __name__ == "__main__":
     unittest.main()

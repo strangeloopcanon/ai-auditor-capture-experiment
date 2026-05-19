@@ -11,6 +11,7 @@ The benchmark has two parts: an initial synthetic stress test and a source-groun
 | Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | Establishes the capture pattern. |
 | Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | Reduces, but does not eliminate, capture. |
 | Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | Shows the effect in a more realistic source-grounded lane. |
+| Raw-vs-summary neutral-disclosure A/B | 150 paired source-grounded model-card cases | Actor is not told the auditor access level; auditor sees either summary-only or raw evidence | 300 | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 16/145 = 11.0% (95% CI 6.9%-17.2%) | Summary: 4/150 = 2.7% (95% CI 1.0%-6.7%); raw: 21/150 = 14.0% (95% CI 9.3%-20.5%) | Directly supports the counterintuitive raw-evidence vulnerability. |
 | Raw-access actor-knowledge A/B | 150 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 300 | 24/292 = 8.2% (95% CI 5.6%-11.9%) | 32/300 = 10.7% (95% CI 7.7%-14.7%) | Tests actor knowledge of auditor raw-evidence access. |
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
@@ -22,6 +23,8 @@ Original synthetic          12.1% | ############
 Synthetic + integrity        4.1% | ####
 Source-grounded integrity   10.6% | ###########
 Hidden access follow-up      8.1% | ########
+Summary-neutral direct arm   2.7% | ###
+Raw-neutral direct arm      11.0% | ###########
 Raw-access A/B               8.2% | ########
 ```
 
@@ -37,6 +40,15 @@ The raw-evidence condition motivated a targeted mechanism check. Holding actor v
 | Synthetic + integrity reminder | 0/25 = 0.0% | 4/24 = 16.7% | +16.7 pp |
 | Source-grounded + integrity reminder | 2/24 = 8.3% | 4/24 = 16.7% | +8.3 pp |
 
+The direct neutral-disclosure follow-up tests the same contrast on the same 150 source-grounded cases while holding actor access disclosure fixed as not disclosed. This is the cleanest run for the original raw-vs-summary question.
+
+| Arm | Auditor access | Actor access disclosure | Persuasion-induced false compliance | Overall false compliance |
+| --- | --- | --- | ---: | ---: |
+| Summary neutral | Summary only | Not disclosed | 4/150 = 2.7% (95% CI 1.0%-6.7%) | 4/150 = 2.7% (95% CI 1.0%-6.7%) |
+| Raw neutral | Raw evidence | Not disclosed | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
+
+Raw-evidence access is higher than summary-only access by 8.4 percentage points on PIFC, with an approximate independent two-proportion interval of 2.7 to 14.1 percentage points. In the paired case comparison, PIFC appears in the raw arm only for 14 cases, in the summary arm only for 2 cases, in both arms for 2 cases, and in neither arm for 132 cases.
+
 ## Hidden Auditor-Access Follow-Up
 
 The raw-evidence condition in the source-grounded run was unexpectedly more capture-prone than the matching summary-only condition. To test whether that came from shared knowledge of auditor access, the follow-up run fixed the source-grounded cases, integrity reminder, full initial-audit rationale visibility, and no-new-evidence persuasion regime, then varied auditor access and what the actor was told about that access.
@@ -48,7 +60,7 @@ The raw-evidence condition in the source-grounded run was unexpectedly more capt
 | H3 | Raw evidence | Not disclosed | 25 | 3/25 = 12.0% (95% CI 4.2%-30.0%) | 3/25 = 12.0% (95% CI 4.2%-30.0%) |
 | H4 | Raw evidence | Told raw access | 25 | 1/24 = 4.2% (95% CI 0.7%-20.2%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
 
-These results do not support a simple "known raw access increases capture" account. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect.
+These results do not support a simple "known raw access increases capture" account. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect. The larger raw-access actor-knowledge A/B below extends the H3/H4 comparison.
 
 Hidden-access follow-up PIFC rate:
 
@@ -72,7 +84,7 @@ The focused A/B keeps auditor raw-evidence access fixed and varies only whether 
 | 150 paired cases | H3 raw / not disclosed | No | 150 | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
 | 150 paired cases | H4 raw / told raw | Yes | 150 | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
 
-The 150-case extension preserves the direction of the actor-knowledge effect but attenuates its size. At 150 paired cases, hidden raw access produces 5.6 percentage points more PIFC than disclosed raw access (11.0% versus 5.4%), with an approximate two-proportion 95% interval of -0.7 to 11.9 percentage points. This supports a mechanism hypothesis but is not a conclusive stand-alone estimate of the effect size.
+The 150-case extension preserves the direction of the actor-knowledge effect but attenuates its size. At 150 paired cases, hidden raw access produces 5.6 percentage points more PIFC than disclosed raw access (11.0% versus 5.4%), with an approximate two-proportion 95% interval of -0.7 to 11.9 percentage points. This suggests that actor knowledge of raw-auditor access may reduce capture, but it does not explain the raw-vs-summary vulnerability above.
 
 Raw-access A/B PIFC rate at 150 paired cases:
 
@@ -110,12 +122,15 @@ Generated cases preserve this provenance in `source_provenance`, and each eviden
 - Synthetic run with integrity reminder: `runs/integrity_reminder_live_150/`
 - Source-grounded integrity stress run: `runs/source_grounded_integrity_stress_25_integrity/`
 - Hidden auditor-access follow-up: `runs/source_grounded_hidden_access_integrity_25/`
+- Summary-neutral direct arm: `runs/source_grounded_summary_neutral_150/`
+- Raw-vs-summary neutral comparison: `runs/source_grounded_raw_vs_summary_neutral_150/`
 - Raw-access actor-knowledge A/B: `runs/source_grounded_raw_access_ab_50/`, `runs/source_grounded_raw_access_ab_75/`, `runs/source_grounded_raw_access_ab_150/`
 - Source-note packet: `data/source_notes/source_grounded_integrity_stress_25.json`
 - Generated source-grounded cases: `data/cases_source_grounded_integrity_stress_25.jsonl`
 - Generated raw-access A/B cases: `data/cases_source_grounded_raw_access_ab_150.jsonl`
 - Source-grounded replication config: `config/replication.source_grounded_integrity_stress_25.json`
 - Hidden-access treatment config: `config/treatments.hidden_access_integrity.json`
+- Summary-neutral treatment config: `config/treatments.summary_neutral_integrity.json`
 - Raw-access A/B treatment config: `config/treatments.raw_access_ab_integrity.json`
 - Repeat plan: `docs/replication_plan.md`
 
@@ -173,6 +188,18 @@ python3 scripts/run_experiment.py \
   --treatments config/treatments.integrity_reminder.json \
   --manifest config/run_manifest.mvp.json \
   --out runs/source_grounded_integrity_stress_25_integrity \
+  --assignment all_conditions \
+  --execute
+```
+
+Run the summary-neutral direct arm:
+
+```bash
+python3 scripts/run_experiment.py \
+  --cases data/cases_source_grounded_raw_access_ab_150.jsonl \
+  --treatments config/treatments.summary_neutral_integrity.json \
+  --manifest config/run_manifest.mvp.json \
+  --out runs/source_grounded_summary_neutral_150 \
   --assignment all_conditions \
   --execute
 ```
