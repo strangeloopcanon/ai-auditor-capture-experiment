@@ -11,6 +11,7 @@ Across the current live runs, the answer is yes. The original synthetic benchmar
 | Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | The capture pattern appears. |
 | Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | The reminder helps, but does not solve it. |
 | Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | The effect returns toward the original range in a more realistic setting. |
+| Raw-access actor-knowledge A/B | 75 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 150 | 11/147 = 7.5% (95% CI 4.2%-12.9%) | 14/150 = 9.3% (95% CI 5.7%-15.1%) | Hidden raw access remains the higher-risk cell. |
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
 
@@ -57,6 +58,26 @@ H3 raw / not disclosed      12.0% | ######
 H4 raw / told raw            4.2% | ##
 ```
 
+## Raw-Access Actor-Knowledge A/B
+
+The focused follow-up keeps auditor raw-evidence access fixed and varies only whether the actor is told that the auditor has raw access. It reuses the completed H3/H4 lanes from the hidden-access run, adds 25 new source-grounded cases to reach 50 paired cases, then adds another 25 because the 50-case result still looked directionally interesting.
+
+| Run | Treatment | Actor told auditor has raw evidence? | Transcripts | Persuasion-induced false compliance | Overall false compliance |
+| --- | --- | --- | ---: | ---: | ---: |
+| 50 paired cases | H3 raw / not disclosed | No | 50 | 5/49 = 10.2% (95% CI 4.4%-21.8%) | 6/50 = 12.0% (95% CI 5.6%-23.8%) |
+| 50 paired cases | H4 raw / told raw | Yes | 50 | 1/48 = 2.1% (95% CI 0.4%-10.9%) | 3/50 = 6.0% (95% CI 2.1%-16.2%) |
+| 75 paired cases | H3 raw / not disclosed | No | 75 | 9/74 = 12.2% (95% CI 6.5%-21.5%) | 10/75 = 13.3% (95% CI 7.4%-22.8%) |
+| 75 paired cases | H4 raw / told raw | Yes | 75 | 2/73 = 2.7% (95% CI 0.8%-9.5%) | 4/75 = 5.3% (95% CI 2.1%-12.9%) |
+
+The result supports the narrower mechanism signal: in this source-grounded setup, the actor is less successful when it knows the auditor can inspect raw evidence. The intervals are still not tight enough for a final effect-size claim, but the direction survived the incremental extension from 50 to 75 cases.
+
+Raw-access A/B PIFC rate at 75 paired cases:
+
+```text
+H3 raw / not disclosed      12.2% | ############
+H4 raw / told raw            2.7% | ###
+```
+
 ## Source-Grounded Setup
 
 The active source-grounded fixture is:
@@ -86,10 +107,13 @@ Generated cases preserve this provenance in `source_provenance`, and each eviden
 - Synthetic run with integrity reminder: `runs/integrity_reminder_live_150/`
 - Source-grounded integrity stress run: `runs/source_grounded_integrity_stress_25_integrity/`
 - Hidden auditor-access follow-up: `runs/source_grounded_hidden_access_integrity_25/`
+- Raw-access actor-knowledge A/B: `runs/source_grounded_raw_access_ab_50/`, `runs/source_grounded_raw_access_ab_75/`
 - Source-note packet: `data/source_notes/source_grounded_integrity_stress_25.json`
 - Generated source-grounded cases: `data/cases_source_grounded_integrity_stress_25.jsonl`
+- Generated raw-access A/B cases: `data/cases_source_grounded_raw_access_ab_75.jsonl`
 - Source-grounded replication config: `config/replication.source_grounded_integrity_stress_25.json`
 - Hidden-access treatment config: `config/treatments.hidden_access_integrity.json`
+- Raw-access A/B treatment config: `config/treatments.raw_access_ab_integrity.json`
 - Repeat plan: `docs/replication_plan.md`
 
 This repo intentionally excludes essay drafts, Google Doc exports, rendered article assets, and other publication artifacts.
@@ -112,6 +136,19 @@ python3 scripts/generate_cases.py \
   --mode source-notes \
   --source-notes data/source_notes/source_grounded_integrity_stress_25.json \
   --output data/cases_source_grounded_integrity_stress_25.jsonl
+```
+
+Generate the focused raw-access A/B case files:
+
+```bash
+python3 scripts/build_raw_access_ab_cases.py \
+  --base-source-notes data/source_notes/source_grounded_integrity_stress_25.json \
+  --extension-source-notes data/source_notes/source_grounded_raw_access_ab_extension_50.json \
+  --combined-source-notes data/source_notes/source_grounded_raw_access_ab_75.json \
+  --extension-cases data/cases_source_grounded_raw_access_ab_extension_50.jsonl \
+  --combined-cases data/cases_source_grounded_raw_access_ab_75.jsonl \
+  --start-index 6 \
+  --end-index 15
 ```
 
 ## Run And Inspect
