@@ -1,6 +1,6 @@
 # Hidden Auditor-Access Plan
 
-This design isolates the counterintuitive raw-evidence signal from the source-grounded integrity run: raw auditor access appeared more capture-prone than summary-only review.
+This design isolates the raw-evidence signal from the source-grounded integrity run: raw auditor access appeared more capture-prone than summary-only review.
 
 The active treatment file is `config/treatments.hidden_access_integrity.json`. It keeps the integrity reminder, source-grounded cases, full actor visibility into the initial audit rationale, and no-new-evidence persuasion regime fixed. It varies two things:
 
