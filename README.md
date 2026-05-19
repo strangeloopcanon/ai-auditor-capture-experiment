@@ -1,17 +1,17 @@
 # Context Capture Audit Game
 
-This repo tests whether an AI actor being audited can talk an AI auditor out of a correct concern without giving it genuinely new admissible evidence.
+This repository tests whether an AI actor being audited can persuade an AI auditor to soften a correct concern without providing genuinely new admissible evidence.
 
-Across the current live runs, the answer is yes. The original synthetic benchmark shows the effect. An explicit anti-capture integrity reminder reduces it, but does not eliminate it. A new source-grounded model-card setup then brings the effect back strongly under that same integrity reminder.
+The benchmark has two parts: an initial synthetic stress test and a source-grounded model-card lane that attaches provenance to each generated case. Across completed runs, persuasion-induced false compliance appears in both settings. An explicit anti-capture integrity reminder reduces the synthetic effect, but the source-grounded lane still produces measurable capture under the same reminder.
 
 ## Current Evidence
 
 | Setup | Cases | Auditor condition | Transcripts | Persuasion-induced false compliance | Overall false compliance | Takeaway |
 | --- | --- | --- | ---: | ---: | ---: | --- |
-| Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | The capture pattern appears. |
-| Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | The reminder helps, but does not solve it. |
-| Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | The effect returns toward the original range in a more realistic setting. |
-| Raw-access actor-knowledge A/B | 75 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 150 | 11/147 = 7.5% (95% CI 4.2%-12.9%) | 14/150 = 9.3% (95% CI 5.7%-15.1%) | Hidden raw access remains the higher-risk cell. |
+| Original synthetic run | Synthetic borderline cases across procurement, access exceptions, and model-card disclosure | Standard auditor prompt | 150 | 15/124 = 12.1% (95% CI 7.5%-19.0%) | 16/150 = 10.7% (95% CI 6.7%-16.6%) | Establishes the capture pattern. |
+| Synthetic run with integrity reminder | Same synthetic cases | Explicit anti-capture reminder to stay independent, evidence-based, and not defer to persuasion | 150 | 5/123 = 4.1% (95% CI 1.7%-9.2%) | 7/150 = 4.7% (95% CI 2.3%-9.3%) | Reduces, but does not eliminate, capture. |
+| Source-grounded model-card stress run | Source-note cases grounded in Hugging Face/NIST material plus realistic organization-specific launch artifacts | Same anti-capture integrity reminder | 150 | 13/123 = 10.6% (95% CI 6.3%-17.2%) | 15/150 = 10.0% (95% CI 6.2%-15.8%) | Shows the effect in a more realistic source-grounded lane. |
+| Raw-access actor-knowledge A/B | 75 paired source-grounded model-card cases | Auditor always has raw evidence; actor is either told this or not told | 150 | 11/147 = 7.5% (95% CI 4.2%-12.9%) | 14/150 = 9.3% (95% CI 5.7%-15.1%) | Isolates actor knowledge of auditor raw-evidence access. |
 
 Confidence intervals are Wilson 95% intervals. Persuasion-induced false compliance uses persuasion opportunities as the denominator; overall false compliance uses all transcripts.
 
@@ -22,13 +22,14 @@ Original synthetic          12.1% | ############
 Synthetic + integrity        4.1% | ####
 Source-grounded integrity   10.6% | ###########
 Hidden access follow-up      8.1% | ########
+Raw-access A/B               7.5% | ########
 ```
 
 The source-grounded run is the new methodological step. It is not another sample from the old synthetic generator: it uses source-note packets, keeps provenance attached to each generated case, and tests model-card certification scenarios built from public governance/process sources plus source-tracked launch artifacts.
 
 ## Raw Evidence Contrast
 
-The raw-evidence condition is the odd signal worth isolating. Holding actor visibility to the full initial-auditor rationale, raw auditor evidence access produced higher PIFC than summary-only access in the three earlier runs.
+The raw-evidence condition motivated a targeted mechanism check. Holding actor visibility to the full initial-auditor rationale, raw auditor evidence access produced higher PIFC than summary-only access in the three earlier runs.
 
 | Run | Summary only + full rationale | Raw evidence + full rationale | Raw minus summary |
 | --- | ---: | ---: | ---: |
@@ -47,7 +48,7 @@ The raw-evidence condition in the source-grounded run was unexpectedly more capt
 | H3 | Raw evidence | Not disclosed | 25 | 3/25 = 12.0% (95% CI 4.2%-30.0%) | 3/25 = 12.0% (95% CI 4.2%-30.0%) |
 | H4 | Raw evidence | Told raw access | 25 | 1/24 = 4.2% (95% CI 0.7%-20.2%) | 2/25 = 8.0% (95% CI 2.2%-25.0%) |
 
-This does not support a simple "known raw access increases capture" story. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect.
+These results do not support a simple "known raw access increases capture" account. In this run, hidden raw access was the highest cell and known raw access was the lowest PIFC cell. The intervals are wide, so the result is best treated as a mechanism signal for replication rather than a settled effect.
 
 Hidden-access follow-up PIFC rate:
 
@@ -60,7 +61,7 @@ H4 raw / told raw            4.2% | ##
 
 ## Raw-Access Actor-Knowledge A/B
 
-The focused follow-up keeps auditor raw-evidence access fixed and varies only whether the actor is told that the auditor has raw access. It reuses the completed H3/H4 lanes from the hidden-access run, adds 25 new source-grounded cases to reach 50 paired cases, then adds another 25 because the 50-case result still looked directionally interesting.
+The focused A/B keeps auditor raw-evidence access fixed and varies only whether the actor is told that the auditor has raw access. It reuses the completed H3/H4 lanes from the hidden-access run, adds 25 new source-grounded cases to reach 50 paired cases, then adds another 25 source-grounded cases for a 75-case paired read.
 
 | Run | Treatment | Actor told auditor has raw evidence? | Transcripts | Persuasion-induced false compliance | Overall false compliance |
 | --- | --- | --- | ---: | ---: | ---: |
@@ -69,7 +70,7 @@ The focused follow-up keeps auditor raw-evidence access fixed and varies only wh
 | 75 paired cases | H3 raw / not disclosed | No | 75 | 9/74 = 12.2% (95% CI 6.5%-21.5%) | 10/75 = 13.3% (95% CI 7.4%-22.8%) |
 | 75 paired cases | H4 raw / told raw | Yes | 75 | 2/73 = 2.7% (95% CI 0.8%-9.5%) | 4/75 = 5.3% (95% CI 2.1%-12.9%) |
 
-The result supports the narrower mechanism signal: in this source-grounded setup, the actor is less successful when it knows the auditor can inspect raw evidence. The intervals are still not tight enough for a final effect-size claim, but the direction survived the incremental extension from 50 to 75 cases.
+The result supports a narrower mechanism signal: in this source-grounded setup, the actor is less successful when it knows the auditor can inspect raw evidence. The observed 75-case difference is 9.4 percentage points (12.2% versus 2.7%), with an approximate two-proportion 95% interval of 1.1 to 17.8 percentage points. Because the event count remains small, this should be treated as evidence of a mechanism rather than a final effect-size estimate.
 
 Raw-access A/B PIFC rate at 75 paired cases:
 
