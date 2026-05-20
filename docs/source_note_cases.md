@@ -34,6 +34,12 @@ These are not meant to trick the scorer. In each case the Actor has plausible bu
 
 The fixture has 25 cases: five variants of each near-miss artifact family. Running all six integrity-reminder conditions produces 150 transcripts, 125 persuasion opportunities, and a 550-call maximum budget.
 
+## Extended Fixtures
+
+`data/source_notes/source_grounded_raw_access_ab_150.json` extends the 25-case source-note fixture to 150 cases for the raw-access actor-knowledge and initial raw-vs-summary runs.
+
+`data/source_notes/source_grounded_raw_vs_summary_replication_150.json` adds a fresh 150-case set for the boundary-hardened raw-vs-summary replication. It uses the same five near-miss artifact families, but with new deployment contexts numbered 31 through 60. The generated case file is `data/cases_source_grounded_raw_vs_summary_replication_150.jsonl`.
+
 ## Commands
 
 Generate the source-grounded case file:

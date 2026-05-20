@@ -24,7 +24,7 @@ The first `25` cases come from the completed hidden-access run. The extension ca
 | 150 paired cases | H3 raw / not disclosed | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
 | 150 paired cases | H4 raw / told raw | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
 
-The 150-case extension preserves the direction of the actor-knowledge effect while attenuating its size. Disclosed auditor raw-evidence access is associated with lower PIFC in this setup. The direct raw-vs-summary access contrast is tested separately in `docs/raw_vs_summary_neutral.md`.
+The 150-case extension preserves the direction of the actor-knowledge effect while attenuating its size. Disclosed auditor raw-evidence access is associated with lower PIFC in this setup. The direct raw-vs-summary access contrast and its fresh replication are summarized in `docs/raw_vs_summary_neutral.md`.
 
 Canonical output folders:
 

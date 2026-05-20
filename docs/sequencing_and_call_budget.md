@@ -79,16 +79,21 @@ With Appeals Judge:
 5. Canonical run used 548 live `gpt-5.4` role calls.
 6. Integrity-reminder run completed at `runs/integrity_reminder_live_150` and reduced, but did not remove, persuasion-induced false compliance.
 7. Source-grounded model-card integrity stress run completed at `runs/source_grounded_integrity_stress_25_integrity` with 150 transcripts, 546 live calls, and 13 persuasion-induced false-compliance cases.
+8. Source-grounded raw-access actor-knowledge run completed at `runs/source_grounded_raw_access_ab_150`.
+9. Initial raw-vs-summary neutral-disclosure comparison completed at `runs/source_grounded_raw_vs_summary_neutral_150`.
+10. Concern-accounting final-auditor intervention completed at `runs/source_grounded_raw_accounting_150`.
+11. Fresh raw-vs-summary replication completed at `runs/source_grounded_raw_vs_summary_fresh_150` with the stricter actor-visible treatment boundary.
 
-## Next Sequencing
+## Follow-Up Sequencing
 
-The next useful extensions are:
+Useful extensions from here are:
 
-1. Focused replication of the 25-case source-grounded integrity stress run to estimate run-to-run variance.
-2. Model-family comparison, such as `gpt-5.5` Actor against `gpt-5.4` Auditor.
-3. Full Cartesian design only if treatment-level causal estimates become necessary.
+1. Repeat the concern-accounting intervention on the fresh case set.
+2. Repeat the fresh raw-vs-summary A/B under a second random case/context seed.
+3. Add model-family comparisons, such as `gpt-5.5` Actor against `gpt-5.4` Auditor.
+4. Use the full Cartesian design only if treatment-level causal estimates become necessary.
 
-Do not run the full Cartesian design by default. The current publishable claim does not require 3,300 calls.
+The full Cartesian design is expensive and should be reserved for treatment-level causal estimates rather than routine follow-up.
 
 ## Source-Grounded Integrity Replications
 
@@ -96,6 +101,12 @@ The active source-grounded replication config is:
 
 ```text
 config/replication.source_grounded_integrity_stress_25.json
+```
+
+The active fresh raw-vs-summary replication config is:
+
+```text
+config/replication.raw_vs_summary_fresh_150.json
 ```
 
 Each repeat runs the same 25 source-grounded near-miss cases across all six integrity-reminder conditions:

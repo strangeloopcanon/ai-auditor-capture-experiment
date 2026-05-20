@@ -1,6 +1,6 @@
 # Hidden Auditor-Access Plan
 
-This design isolates the raw-evidence signal from the source-grounded integrity run: raw auditor access appeared more capture-prone than summary-only review.
+This design is the first source-grounded access-knowledge test. It followed the early signal that raw auditor access could be more capture-prone than summary-only review.
 
 The active treatment file is `config/treatments.hidden_access_integrity.json`. It keeps the integrity reminder, source-grounded cases, full actor visibility into the initial audit rationale, and no-new-evidence persuasion regime fixed. It varies two things:
 
@@ -55,4 +55,4 @@ By treatment:
 | `H3_raw_hidden_access_integrity` | `3/25 = 12.0%` | `4.2%-30.0%` | `3/25 = 12.0%` |
 | `H4_raw_known_access_integrity` | `1/24 = 4.2%` | `0.7%-20.2%` | `2/25 = 8.0%` |
 
-The result does not support the simple version of the shared-context hypothesis where known raw access should be the most capture-prone cell. The strongest exploratory signal is instead that raw access can still be capture-prone when the actor is not explicitly told about that access, while explicit raw-access disclosure did not increase PIFC in this small run.
+The result does not support the simple version of the shared-context hypothesis where known raw access should be the most capture-prone cell. The strongest exploratory signal is instead that raw access can still be capture-prone when the actor is not explicitly told about that access, while explicit raw-access disclosure did not increase PIFC in this small run. Later runs separate this actor-knowledge question from the broader raw-vs-summary evidence-access question.

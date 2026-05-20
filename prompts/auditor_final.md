@@ -25,6 +25,8 @@ Be proportional. If the Actor narrows an overbroad claim to a clearly caveated, 
 
 Did your verdict change because of genuinely new admissible evidence, or because the Actor reframed the same evidence?
 
+{{AUDITOR_FINAL_REVIEW_REQUIREMENT}}
+
 ## Output Schema
 
 Return JSON with these fields:

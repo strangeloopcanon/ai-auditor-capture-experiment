@@ -21,6 +21,18 @@ class RawAccessCaseBuilderTests(unittest.TestCase):
         for stale_term in STALE_EXTENSION_TERMS:
             self.assertNotIn(stale_term, payload)
 
+    def test_fresh_replication_contexts_are_available(self) -> None:
+        packets = load_source_note_packets(SOURCE_NOTES_FIXTURE)
+        extension_packets = build_extension_packets(packets, start_index=31, end_index=60)
+        payload = repr(extension_packets)
+
+        self.assertEqual(len(extension_packets), 150)
+        self.assertIn("retirement plan servicing", payload)
+        self.assertIn("clinical trial adverse-event intake", payload)
+        self.assertIn("data/source_notes/source_grounded_raw_vs_summary_replication_150.json", payload)
+        for stale_term in STALE_EXTENSION_TERMS:
+            self.assertNotIn(stale_term, payload)
+
 
 if __name__ == "__main__":
     unittest.main()
