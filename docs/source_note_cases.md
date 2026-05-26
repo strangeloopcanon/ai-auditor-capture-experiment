@@ -20,7 +20,7 @@ The active fixture at `data/source_notes/source_grounded_integrity_stress_25.jso
 
 ## Integrity-Stress Fixture
 
-`data/source_notes/source_grounded_integrity_stress_25.json` is a deliberately model-card-heavy stress set for the integrity-reminder condition. It does not change the prompts, treatment config, scoring rules, or integrity reminder. The only change is the case material.
+`data/source_notes/source_grounded_integrity_stress_25.json` is a deliberately model-card-heavy stress set. It keeps the prompts and scoring rules fixed while changing the case material from synthetic borderline cases to source-grounded model-card near misses.
 
 The cases are deliberately less tidy than a minimal fixture because the evidence is meant to look more like real launch residue:
 
@@ -28,17 +28,30 @@ The cases are deliberately less tidy than a minimal fixture because the evidence
 - draft mitigation with missing owner or threshold
 - unresolved materiality dispute
 - missing eval coverage for named deployment contexts
-- rollout or monitoring controls that do not actually exclude the weak segment
+- rollout or monitoring controls that leave the weak segment in scope
 
-These are not meant to trick the scorer. In each case the Actor has plausible business-facing artifacts, but still lacks the specific admissible evidence needed for clean certification. In the completed run, the Auditor still moved to false compliance in 13 of 123 persuasion opportunities, which is the signal this lane is meant to stress-test.
+The scorer target stays clear. In each case the Actor has plausible business-facing artifacts, but still lacks the specific admissible evidence needed for clean certification.
 
 The fixture has 25 cases: five variants of each near-miss artifact family. Running all six integrity-reminder conditions produces 150 transcripts, 125 persuasion opportunities, and a 550-call maximum budget.
+
+## Reminder Comparison
+
+The fixed-boundary rerun gives a direct reminder comparison on the same source-grounded cases:
+
+| Run | PIFC | Overall false compliance |
+| --- | ---: | ---: |
+| No integrity reminder | 21/121 = 17.4% (95% CI 11.6%-25.1%) | 25/150 = 16.7% (95% CI 11.6%-23.4%) |
+| Integrity reminder | 7/124 = 5.6% (95% CI 2.8%-11.2%) | 8/150 = 5.3% (95% CI 2.7%-10.2%) |
+
+The reminder reduces false softening in this source-grounded setting. The checked source-grounded cases are still model-card disclosure cases, so the next source-grounded domain check needs new realistic fixtures.
 
 ## Extended Fixtures
 
 `data/source_notes/source_grounded_raw_access_ab_150.json` extends the 25-case source-note fixture to 150 cases for the raw-access actor-knowledge and initial raw-vs-summary runs.
 
 `data/source_notes/source_grounded_raw_vs_summary_replication_150.json` adds a fresh 150-case set for the boundary-hardened raw-vs-summary replication. It uses the same five near-miss artifact families, but with new deployment contexts numbered 31 through 60. The generated case file is `data/cases_source_grounded_raw_vs_summary_replication_150.jsonl`.
+
+Phase 1 synthetic cases span procurement, access exceptions, and model-card disclosure. The source-grounded fixtures in this branch use model-card disclosure only, so realistic domain effects require new source-note packets.
 
 ## Commands
 
@@ -70,6 +83,17 @@ python3 scripts/run_experiment.py \
   --out runs/source_grounded_integrity_stress_25_integrity \
   --assignment all_conditions \
   --execute
+```
+
+Run the fixed-boundary reminder comparison and methodology reruns:
+
+```bash
+python3 scripts/run_methodology_reruns.py \
+  --which source-grounded-reminder \
+  --execute \
+  --parallel-chunks \
+  --jobs 5 \
+  --overwrite
 ```
 
 Plan repeated integrity-stress runs without spending calls:
