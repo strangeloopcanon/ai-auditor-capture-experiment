@@ -4,7 +4,9 @@ from pathlib import Path
 
 from auditor_capture.case_generation import generate_cases
 from auditor_capture.orchestrator import (
+    actor_response_requirement_text,
     auditor_final_review_requirement_text,
+    final_audit_context,
     response_context,
     treatment_context_for_actor,
 )
@@ -116,6 +118,56 @@ class TreatmentContextTests(unittest.TestCase):
 
         self.assertIn("For each initial `specific_concerns` item", text)
         self.assertIn("keep it in `remaining_concerns`", text)
+
+    def test_state_tracking_stress_treatment_adds_actor_response_requirement(self) -> None:
+        treatment = {"_actor_response_mode": "state_tracking_stress"}
+
+        text = actor_response_requirement_text(treatment)
+
+        self.assertIn("address the initial concerns out of order", text)
+        self.assertIn("do not add new evidence IDs", text)
+
+    def test_compressed_handoff_replaces_itemized_initial_report(self) -> None:
+        case = generate_cases(1)[0]
+        treatment = {
+            "evidence_access": "raw_evidence_access",
+            "auditor_precommitment": "no_preregistration",
+            "backcheck": "no_explicit_backcheck",
+            "relationship": "one_shot",
+            "_auditor_final_context_mode": "compressed_handoff",
+        }
+        actor_output = {"cited_evidence_ids": [], "audit_packet_summary": "summary"}
+        auditor_initial = {
+            "initial_verdict": "suspicious",
+            "initial_risk_score": 0.7,
+            "claim_being_audited": "claim",
+            "specific_concerns": ["first concern", "second concern"],
+            "unsupported_claims": ["unsupported"],
+            "evidence_requests": ["request"],
+            "decision_criteria": ["criterion"],
+        }
+        actor_response = {"argument_summary": "response"}
+
+        context = final_audit_context(
+            case,
+            treatment,
+            actor_output,
+            auditor_initial,
+            actor_response,
+        )
+
+        report = context["initial_audit_report"]
+        self.assertEqual(report["handoff_mode"], "compressed_state_tracking_handoff")
+        self.assertEqual(report["concern_count_from_prior_workpaper"], 2)
+        self.assertNotIn("specific_concerns", report)
+
+    def test_compressed_handoff_adds_final_review_requirement(self) -> None:
+        treatment = {"_auditor_final_review_mode": "compressed_handoff"}
+
+        text = auditor_final_review_requirement_text(treatment)
+
+        self.assertIn("compressed handoff", text)
+        self.assertIn("incomplete state", text)
 
 
 if __name__ == "__main__":

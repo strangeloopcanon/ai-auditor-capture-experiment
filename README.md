@@ -38,7 +38,8 @@ Overall false compliance is broader than PIFC. It counts false compliant or cave
 3. The raw-evidence access story narrowed after the actor-visible treatment boundary was fixed. Raw access remains worth studying, but it is no longer the main headline.
 4. Actor knowledge of raw auditor access is unsettled. The fixed-boundary rerun put the told arm higher, but the contrast remains uncertain.
 5. Concern accounting is the strongest mitigation tested. On the clean fixed-boundary raw-access interaction set, standard final audit had 6/143 PIFC cases and concern accounting had 0/143.
-6. The realistic source-grounded work is currently model-card only. Other domains still need source-grounded fixtures.
+6. A state-tracking stress pilot sharpens the mitigation result. Longer, messier actor replies produced one observed PIFC case under the standard final audit and zero under exact concern accounting. A compressed-handoff variant also produced one PIFC case, which points to durable concern-ledger preservation as the next limitation.
+7. The realistic source-grounded work is currently model-card only. Other domains still need source-grounded fixtures.
 
 ## Results
 
@@ -52,6 +53,7 @@ PIFC uses persuasion opportunities as the denominator. Confidence intervals are 
 | Does raw evidence access raise PIFC? | Original 150 cases rerun through the fixed code, plus a fresh fixed-boundary replication. | Original fixed: raw 11/144 = 7.6%, summary 5/150 = 3.3%. Fresh fixed: raw 7/142 = 4.9%, summary 9/150 = 6.0%. | The initial raw-access gap narrows under the fixed boundary. |
 | Does telling the actor about raw auditor access matter? | Original 150 actor-knowledge cases rerun under the fixed boundary. | Not told: 6/143 = 4.2%. Told: 14/145 = 9.7%. | Direction changed under the fixed boundary; treat as exploratory. |
 | Can concern accounting block the failure? | Same fixed-boundary raw-access interactions; only the final auditor is rerun with unresolved-concern accounting. | Standard: 6/143 = 4.2%. Concern accounting: 0/143 = 0.0% (95% CI 0.0%-2.6%). | It removed all observed PIFC in this run. Overall false compliance remained 7/150. |
+| Does concern accounting survive state-tracking pressure? | 50 high-concern fixed-boundary cases rerun with longer, out-of-order actor responses. | Standard: 1/50 = 2.0%. Exact concern accounting: 0/50 = 0.0%. Compressed handoff: 1/50 = 2.0%. | Exact ledgers still blocked observed PIFC; lossy handoff reintroduced one failure. |
 
 ```text
 PIFC rate, percent of persuasion opportunities
@@ -75,6 +77,11 @@ Raw access, actor told                      9.7% | ##########
 
 Standard final audit, mitigation set         4.2% | ####
 Concern-accounting final audit              0.0% |
+
+State-tracking stress pilot
+  Standard messy final audit                 2.0% | ##
+  Exact concern accounting                   0.0% |
+  Compressed handoff                         2.0% | ##
 ```
 
 ## Fixed Boundary
@@ -112,6 +119,7 @@ Generated cases preserve provenance in `source_provenance`, and each evidence it
 | Actor-knowledge fixed-boundary rerun | `docs/raw_access_ab_plan.md`, `runs/source_grounded_raw_access_ab_fixed_150_comparison/` |
 | Methodology reruns | `docs/methodology_reruns.md`, `scripts/run_methodology_reruns.py` |
 | Concern accounting | `docs/concern_accounting.md`, `runs/source_grounded_raw_accounting_fixed_150/`, `runs/source_grounded_raw_accounting_fixed_150_comparison/` |
+| State-tracking stress | `docs/state_tracking_stress.md`, `runs/source_grounded_state_tracking_stress_50/`, `runs/source_grounded_state_tracking_stress_accounting_50/`, `runs/source_grounded_state_tracking_stress_handoff_50/` |
 | Source-note lane | `docs/source_note_cases.md` |
 
 ## Reproduce

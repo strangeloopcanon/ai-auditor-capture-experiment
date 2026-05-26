@@ -17,6 +17,8 @@ If no new evidence is permitted, work only from the evidence already available i
 
 Do not cite private or inadmissible context as public evidence. You may use it only to understand why the locked decision matters.
 
+{{ACTOR_RESPONSE_REQUIREMENT}}
+
 ## Response Context
 
 {{RESPONSE_CONTEXT}}
