@@ -2,7 +2,9 @@
 
 This is the realistic concern-accounting rerun.
 
-The earlier mitigation handed the final auditor the initial auditor's `specific_concerns` and required explicit accounting. That is a clean mechanism test. This run asks a harder question: can the auditor create its own formal ledger at the initial stage, keep it private from the actor, and use it at final review?
+The earlier mitigation handed the final auditor the initial auditor's `specific_concerns` and required explicit accounting. That is the clean mechanism test: a complete checklist plus a strict closure rule. This run asks a harder question: can the auditor create its own formal ledger at the initial stage, keep it private from the actor, and use it at final review?
+
+The answer is mixed in the useful way. Self-generated ledgers sharply reduce PIFC. They also expose the next failure surface: the auditor can maintain the ledger loosely, omit pressure points, or close rows without new admissible evidence.
 
 ## Design
 
@@ -36,9 +38,20 @@ The 50-case pilot uses the same high-concern selection as the state-tracking str
 | Full 150 stress | Standard final | 3/148 = 2.0% | 5/150 = 3.3% | Ledger created but not available at final review |
 | Full 150 stress | Ledger final | 0/148 = 0.0% | 2/150 = 1.3% | Unsupported ledger closure in 52/148 continued cases |
 
+## Place in the ladder
+
+| Mitigation step | Who supplies the state? | Final-auditor task | Result |
+| --- | --- | --- | ---: |
+| Exact concern accounting | The experiment supplies the complete initial concern checklist | Check each item against new admissible evidence | 0/143 PIFC |
+| Exact accounting under stress | The experiment supplies the complete checklist after a messier actor response | Preserve each unresolved item | 0/50 PIFC |
+| Self-generated ledger | The auditor creates the ledger itself | Update its own private ledger before deciding | 2/149 PIFC |
+| Self-generated ledger under stress | The auditor creates the ledger itself and receives it after a longer actor response | Update the ledger under state-tracking pressure | 0/148 PIFC |
+
+This is the important distinction. When the final auditor is handed a complete checklist and no new evidence appears, it works in the observed fixed-boundary run. When the auditor has to create and maintain the same discipline itself, the mitigation still helps but becomes imperfect.
+
 ## Reading
 
-Self-generated ledgers help, but they are not a perfect mitigation.
+Self-generated ledgers help, with residual failures.
 
 In the ordinary full run, giving the final auditor the private ledger reduced PIFC from 8/149 to 2/149. Those two remaining cases are ledger escapes: the final auditor had a ledger and still reached false compliance without new admissible evidence.
 

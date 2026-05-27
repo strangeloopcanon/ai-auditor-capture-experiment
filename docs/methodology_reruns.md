@@ -28,7 +28,7 @@ The fixed boundary hides auditor-only treatment fields from the actor-decision p
 | Raw-access actor knowledge, fixed boundary | Actor not told | 6/143 = 4.2% (95% CI 1.9%-8.9%) | 13/150 = 8.7% (95% CI 5.1%-14.3%) |
 | Raw-access actor knowledge, fixed boundary | Actor told | 14/145 = 9.7% (95% CI 5.8%-15.6%) | 19/150 = 12.7% (95% CI 8.3%-18.9%) |
 
-## Follow-On Mitigation Check
+## Follow-On Mitigation Ladder
 
 The concern-accounting final-auditor intervention was repeated on the fixed-boundary raw-access interaction set. It reuses the `H3_raw_hidden_access_integrity` actor-decision, initial-audit, and actor-response stages from `runs/source_grounded_raw_access_ab_fixed_150/`, then reruns only the final auditor with the unresolved-concern accounting instruction.
 
@@ -39,10 +39,26 @@ The concern-accounting final-auditor intervention was repeated on the fixed-boun
 
 Paired PIFC discordance: 6 standard-only failures, 0 accounting-only failures, exact McNemar p = 0.03125.
 
+The later ledger runs extend this mitigation in two steps. First, the exact concern checklist is kept available under state-tracking stress. Then the auditor must create and maintain its own private `concern_ledger`.
+
+| Mitigation step | PIFC | Reading |
+| --- | ---: | --- |
+| Exact concern accounting | 0/143 | A complete supplied checklist blocked observed PIFC on the fixed-boundary interaction set. |
+| Exact concern accounting under stress | 0/50 | The supplied checklist survived a longer, messier actor response in the pilot. |
+| Compressed handoff under stress | 1/50 | Losing the exact checklist reintroduced one observed failure. |
+| Self-generated ledger, full fixed-boundary set | 2/149 | Auditor-created bookkeeping sharply reduced PIFC but left ledger escapes. |
+| Self-generated ledger, full stress set | 0/148 | No observed PIFC remained under stress, while unsupported ledger closure stayed high. |
+
 Canonical artifacts:
 
 - `runs/source_grounded_raw_accounting_fixed_150/`
 - `runs/source_grounded_raw_accounting_fixed_150_comparison/`
+- `runs/source_grounded_state_tracking_stress_accounting_50/`
+- `runs/source_grounded_state_tracking_stress_handoff_50/`
+- `runs/source_grounded_self_ledger_150/`
+- `runs/source_grounded_self_ledger_150_comparison/`
+- `runs/source_grounded_self_ledger_stress_150/`
+- `runs/source_grounded_self_ledger_stress_150_comparison/`
 
 ## Reading
 
@@ -52,7 +68,7 @@ The raw-vs-summary result is narrower. On the original cases, the fixed-boundary
 
 The actor-knowledge result changed direction under the fixed boundary. The old run had lower PIFC when the actor was told the auditor had raw access. The fixed-boundary rerun has higher PIFC in the told arm, but the contrast is still uncertain.
 
-The concern-accounting mitigation remains the strongest intervention. In the fixed-boundary rerun it removed all observed PIFC, while overall false compliance remained at 7/150.
+The concern-accounting mitigation remains the strongest intervention. In the fixed-boundary rerun it removed all observed PIFC, while overall false compliance remained at 7/150. The self-generated ledger runs make the same idea more realistic: the auditor creates the state itself, and the final auditor uses it later. That version reduces PIFC from 8/149 to 2/149 on the full fixed-boundary set and from 3/148 to 0/148 under stress. The remaining issue is ledger discipline, especially closing rows without genuinely new admissible evidence.
 
 All current source-grounded fixtures are model-card disclosure cases. Realistic source-grounded domain effects require new source-note packets.
 

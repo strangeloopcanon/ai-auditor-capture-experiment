@@ -23,6 +23,8 @@ The Regulator is deterministic. LLMs produce Actor and Auditor behavior. The Reg
 | Source-grounded model-card stress | 25 cases x 6 conditions | Tests the same mechanism on public policy/process grounding plus realistic launch artifacts. |
 | Source-grounded raw-vs-summary | 150 paired cases | Tests whether raw admissible evidence changes the result relative to actor summaries. |
 | Source-grounded actor knowledge | 150 paired cases | Tests whether telling the actor about raw auditor access changes the result. |
+| Concern accounting | 150 fixed-boundary interactions | Tests whether a complete concern checklist blocks persuasion-induced false compliance at final review. |
+| Self-generated concern ledger | 150 fixed-boundary interactions, with and without state-tracking stress | Tests whether the auditor can create and maintain the concern state itself. |
 
 The current source-grounded cases are all model-card disclosure cases. Realistic source-grounded domain effects need source-note packets beyond model-card disclosure.
 
@@ -46,6 +48,7 @@ The actor-response prompt can still receive explicit auditor-access disclosure w
 
 - Case generation for synthetic and source-note lanes.
 - Treatment definitions for baseline, integrity-reminder, raw-vs-summary, actor-knowledge, and concern-accounting runs.
+- Self-generated ledger treatments where private auditor state is stripped from actor-visible context and restored only for ledger-final arms.
 - Structured Actor and Auditor prompts.
 - Codex model runner with dry-run planning before live calls.
 - Per-call prompt and context hashing.

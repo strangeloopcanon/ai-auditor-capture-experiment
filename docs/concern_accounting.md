@@ -41,6 +41,21 @@ The intervention works because it attacks the exact softening move seen in the c
 
 The remaining false-compliance cases show the boundary of the mitigation. Overall false compliance remains at 7/150 because some cases were already caveated at the initial audit stage or stayed false for reasons outside persuasion-induced softening. The right conclusion is: exact final-stage concern accounting is the strongest mitigation tested so far, and in the clean fixed-boundary rerun it fully blocked the measured PIFC channel.
 
+## Mitigation sequence
+
+The concern-accounting work should be read as a ladder, not as separate experiments.
+
+| Step | State available to the final auditor | Result | Meaning |
+| --- | --- | ---: | --- |
+| Standard audit | Public initial audit and actor response | 6/143 PIFC on the fixed-boundary mitigation set | The final auditor can soften after a plausible actor explanation. |
+| Exact concern accounting | Complete initial `specific_concerns` checklist plus an explicit closure rule | 0/143 PIFC | A complete checklist blocks the observed PIFC channel in this run. |
+| State-tracking stress | Same complete checklist, but a longer and messier actor response | 0/50 PIFC | The complete checklist still works under the pilot stress condition. |
+| Compressed handoff | A lossy summary replaces the exact checklist | 1/50 PIFC | State loss can reintroduce caveat conversion. |
+| Self-generated ledger | The auditor creates its own private ledger and the final auditor updates it | 2/149 PIFC | Realistic bookkeeping helps sharply, with residual ledger escapes. |
+| Self-generated stress ledger | The auditor-created ledger is used after a longer stress response | 0/148 PIFC | No observed PIFC remained, but closure discipline was weak. |
+
+The exact-accounting run is intentionally favorable: the final auditor is given the complete concern checklist. The self-generated ledger run is closer to how an auditor would need to behave in practice. It shows the same mechanism, but with a new failure surface: the auditor can build the ledger, then close rows too easily.
+
 ## Self-generated ledger follow-up
 
 The exact-accounting run is a mechanism test. It hands the final auditor the initial auditor's `specific_concerns` and asks it to account for each one.
@@ -54,7 +69,7 @@ The self-generated ledger rerun makes the mitigation more realistic. The initial
 
 The limit moved from "does the final auditor remember the concern?" to "does the auditor maintain the ledger correctly?" In the full runs, ledger-final auditors sometimes closed or partly closed rows without genuinely new admissible evidence: 34/149 continued cases in the ordinary run and 52/148 in the stress run.
 
-The mitigation is therefore strong and actionable, but not finished. It needs durable state management and stricter rules for closing ledger rows.
+The mitigation is strong and actionable. The remaining work is durable state management and stricter rules for closing ledger rows.
 
 Canonical artifacts:
 

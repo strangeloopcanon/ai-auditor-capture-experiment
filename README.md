@@ -6,7 +6,7 @@ The headline result:
 
 > Even without deception, bad faith, or hidden evidence, an audited model can make an auditor less reliable. The failure comes from ordinary explanation: the actor offers a plausible caveat, prioritization story, or implementation rationale, and the auditor sometimes relaxes a valid concern without receiving new admissible evidence.
 
-The strongest mitigation line is concern accounting. Exact final-stage accounting removed all observed PIFC in one fixed-boundary rerun. A more realistic version, where the auditor creates and later updates its own private ledger, sharply reduces audit capture but does not eliminate it.
+The strongest mitigation line is concern accounting. Exact final-stage accounting, where the final auditor receives a complete concern checklist and must account for each item, removed all observed PIFC in one fixed-boundary rerun. A more realistic version, where the auditor creates and later updates its own private ledger, sharply reduces audit capture while leaving residual failures.
 
 ## Failure Mode
 
@@ -38,9 +38,25 @@ Overall false compliance is broader than PIFC. It counts false compliant or cave
 3. The raw-evidence access story narrowed after the actor-visible treatment boundary was fixed. Raw access remains worth studying, but it is no longer the main headline.
 4. Actor knowledge of raw auditor access is unsettled. The fixed-boundary rerun put the told arm higher, but the contrast remains uncertain.
 5. Exact concern accounting is the strongest mitigation tested. On the clean fixed-boundary raw-access interaction set, standard final audit had 6/143 PIFC cases and exact concern accounting had 0/143.
-6. Self-generated concern ledgers make the mitigation more realistic and less perfect. On the full fixed-boundary set, standard final audit had 8/149 PIFC cases. A final auditor that received and updated the auditor's own private ledger had 2/149.
-7. State-tracking pressure does not break the self-ledger result in the full run, but it exposes a separate procedural weakness. Under longer, messier actor replies, standard final audit had 3/148 PIFC cases and self-ledger final audit had 0/148. The ledger-final arm still closed or partly closed ledger items without new admissible evidence in 52/148 continued cases.
+6. Self-generated concern ledgers make the mitigation realistic and weaker. On the full fixed-boundary set, standard final audit had 8/149 PIFC cases. A final auditor that received and updated the auditor's own private ledger had 2/149.
+7. State-tracking pressure exposes the remaining procedural weakness. Under longer, messier actor replies, standard final audit had 3/148 PIFC cases and self-ledger final audit had 0/148. The ledger-final arm still closed or partly closed ledger items without new admissible evidence in 52/148 continued cases.
 8. The realistic source-grounded work is currently model-card only. Other domains still need source-grounded fixtures.
+
+## Mitigation Ladder
+
+The runs form a ladder. Each step keeps the same basic audit game and adds more discipline around unresolved concerns.
+
+| Step | What changes | PIFC result | What it teaches |
+| --- | --- | ---: | --- |
+| Standard audit | The final auditor reads the actor response and decides normally. | Baseline failures appear across synthetic and source-grounded runs. | Ordinary explanations can turn unresolved problems into caveats. |
+| Integrity reminder | The final auditor receives a general reminder to avoid accepting unsupported claims. | Source-grounded PIFC falls from 21/121 to 7/124. | A generic caution helps, with residual failures. |
+| Exact concern accounting | The final auditor receives the complete initial concern checklist and must account for every item. | 6/143 to 0/143. | When the complete checklist is available and closure requires new evidence, the observed PIFC channel is blocked. |
+| Exact accounting under stress | Actor replies are longer and harder to track; exact checklist remains available. | 1/50 to 0/50. | The exact checklist still works when the conversation gets messier. |
+| Lossy handoff | The final auditor gets a compressed handoff instead of the exact checklist. | 0/50 exact accounting vs 1/50 compressed handoff. | Losing state can bring the failure back. |
+| Self-generated ledger | The auditor must create its own private ledger, hide it from the actor, and use it later. | 8/149 to 2/149. | Realistic bookkeeping sharply reduces capture but leaves ledger escapes. |
+| Self-generated ledger under stress | The same self-created ledger is tested with longer, harder-to-track actor replies. | 3/148 to 0/148. | The ledger can block observed PIFC under stress, while loose row closure remains a warning sign. |
+
+The short version: a complete supplied checklist works in the observed fixed-boundary run. Asking the auditor to create and maintain that discipline itself works less cleanly. The remaining problem is state management: the auditor has to remember every live concern and apply a strict rule for closing it.
 
 ## Results
 

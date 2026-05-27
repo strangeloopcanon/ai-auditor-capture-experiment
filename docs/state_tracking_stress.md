@@ -1,8 +1,10 @@
 # State-Tracking Stress Test
 
-This experiment asks whether the concern-accounting mitigation depends on a clean, visible concern ledger.
+This experiment asks whether the concern-accounting mitigation depends on preserving the concern state across a messier audit interaction.
 
 The answer from this pilot is yes. When the final auditor sees the original itemized concerns and must account for them one by one, observed persuasion-induced false compliance falls to zero again. When the same interaction is rerun through a compressed handoff that hides the exact checklist, one failure reappears.
+
+The later self-generated ledger run adds a more realistic version of the same test. Instead of receiving a supplied checklist, the auditor creates its own private ledger and the final auditor updates it. That version still reduces the failure, but it also shows why real audit procedures need disciplined state management.
 
 ## Design
 
@@ -69,6 +71,16 @@ On the full 150-case state-tracking-stress rerun:
 This supports the state-tracking interpretation. Keeping the auditor's own ledger available at final review blocked observed PIFC in the full stress run. The remaining weakness is closure discipline: the ledger-updating final auditor closed or partly closed a concern without new admissible evidence in 52/148 continued cases.
 
 The concern ledger helps the auditor remember. It does not guarantee the auditor applies the closure rule strictly.
+
+Put alongside the exact-accounting result, the lesson is sharp:
+
+| Condition | PIFC | Reading |
+| --- | ---: | --- |
+| Supplied exact checklist, standard fixed-boundary interaction | 0/143 | Complete concern state plus strict accounting blocked observed PIFC. |
+| Supplied exact checklist, stress pilot | 0/50 | The same supplied state survived longer actor replies. |
+| Compressed handoff, stress pilot | 1/50 | Losing the exact checklist reopened the failure. |
+| Self-generated ledger, full fixed-boundary interaction | 2/149 | Auditor-created state helped but left residual ledger escapes. |
+| Self-generated ledger, full stress interaction | 0/148 | No observed PIFC remained, while unsupported row closure stayed high. |
 
 ## Artifacts
 
