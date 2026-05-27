@@ -19,7 +19,9 @@ from auditor_capture.orchestrator import (
     aggregate_metrics,
     append_jsonl,
     actor_response_requirement_text,
+    add_final_ledger_updates_placeholder,
     auditor_final_review_requirement_text,
+    auditor_final_schema_path,
     auditor_integrity_reminder_text,
     call_record,
     final_audit_context,
@@ -150,7 +152,6 @@ def run_response_and_final(
         cwd=ROOT,
     )
     response_schema = SCHEMA_DIR / "actor_response.schema.json"
-    final_schema = SCHEMA_DIR / "auditor_final.schema.json"
     transcripts = []
     seen_case_ids: set[str] = set()
 
@@ -251,6 +252,7 @@ def run_response_and_final(
                     "AUDITOR_FINAL_REVIEW_REQUIREMENT": auditor_final_review_requirement_text(treatment),
                 },
             )
+            final_schema = auditor_final_schema_path(treatment)
             final_output_path = base / "auditor_final.json"
             final_record = call_record(
                 run_id=run_id,
@@ -289,6 +291,11 @@ def run_response_and_final(
                     "escalation_decision": "escalate",
                     "confidence": 0.5,
                 }
+                if treatment.get("_auditor_final_review_mode") == "self_generated_concern_ledger":
+                    auditor_final = add_final_ledger_updates_placeholder(
+                        auditor_final,
+                        source_outputs["auditor_initial"],
+                    )
                 if dry_run:
                     write_json(final_output_path, auditor_final)
             events.append({**final_record, "output": auditor_final})

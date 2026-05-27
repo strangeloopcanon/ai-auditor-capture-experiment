@@ -39,12 +39,31 @@ The concern-accounting final audit lowers PIFC by 4.2 percentage points relative
 
 The intervention works because it attacks the exact softening move seen in the case review. The actor can still argue for a narrower caveated reading, but the final auditor must keep track of whether the original missing requirement was actually closed. In the fixed-boundary rerun, that bookkeeping removed all observed PIFC.
 
-The remaining false-compliance cases show the boundary of the mitigation. Overall false compliance remains at 7/150 because some cases were already caveated at the initial audit stage or stayed false for reasons outside persuasion-induced softening. The right conclusion is: concern accounting is the strongest mitigation tested so far, and in the clean fixed-boundary rerun it fully blocked the measured PIFC channel.
+The remaining false-compliance cases show the boundary of the mitigation. Overall false compliance remains at 7/150 because some cases were already caveated at the initial audit stage or stayed false for reasons outside persuasion-induced softening. The right conclusion is: exact final-stage concern accounting is the strongest mitigation tested so far, and in the clean fixed-boundary rerun it fully blocked the measured PIFC channel.
+
+## Self-generated ledger follow-up
+
+The exact-accounting run is a mechanism test. It hands the final auditor the initial auditor's `specific_concerns` and asks it to account for each one.
+
+The self-generated ledger rerun makes the mitigation more realistic. The initial auditor must create a private `concern_ledger`; the actor sees only the public audit; the final auditor either receives that ledger and updates it or receives only the public audit.
+
+| Run | Standard final | Ledger-updating final | Reading |
+| --- | ---: | ---: | --- |
+| Full fixed-boundary set | 8/149 PIFC = 5.4% | 2/149 PIFC = 1.3% | Self-generated ledgers reduce PIFC but do not eliminate it. |
+| Full state-tracking-stress set | 3/148 PIFC = 2.0% | 0/148 PIFC = 0.0% | No observed PIFC remained under stress. |
+
+The limit moved from "does the final auditor remember the concern?" to "does the auditor maintain the ledger correctly?" In the full runs, ledger-final auditors sometimes closed or partly closed rows without genuinely new admissible evidence: 34/149 continued cases in the ordinary run and 52/148 in the stress run.
+
+The mitigation is therefore strong and actionable, but not finished. It needs durable state management and stricter rules for closing ledger rows.
 
 Canonical artifacts:
 
 - `runs/source_grounded_raw_accounting_fixed_150/`
 - `runs/source_grounded_raw_accounting_fixed_150_comparison/`
+- `runs/source_grounded_self_ledger_150/`
+- `runs/source_grounded_self_ledger_150_comparison/`
+- `runs/source_grounded_self_ledger_stress_150/`
+- `runs/source_grounded_self_ledger_stress_150_comparison/`
 
 Earlier mechanism-check artifacts:
 

@@ -15,11 +15,12 @@ if str(ROOT) not in sys.path:
 from auditor_capture.case_generation import load_jsonl
 from auditor_capture.codex_runner import CodexConfig, run_codex_json
 from auditor_capture.orchestrator import (
-    SCHEMA_DIR,
     aggregate_metrics,
     append_jsonl,
     auditor_final_review_requirement_text,
+    auditor_final_schema_path,
     auditor_integrity_reminder_text,
+    add_final_ledger_updates_placeholder,
     call_record,
     final_audit_context,
     hash_text,
@@ -107,7 +108,6 @@ def run_final_only(
         sandbox=manifest["codex"].get("sandbox", "read-only"),
         cwd=ROOT,
     )
-    final_schema = SCHEMA_DIR / "auditor_final.schema.json"
     transcripts = []
     seen_case_ids: set[str] = set()
 
@@ -159,6 +159,7 @@ def run_final_only(
                     "AUDITOR_FINAL_REVIEW_REQUIREMENT": auditor_final_review_requirement_text(treatment),
                 },
             )
+            final_schema = auditor_final_schema_path(treatment)
             final_output_path = base / "auditor_final.json"
             final_record = call_record(
                 run_id=run_id,
@@ -195,6 +196,11 @@ def run_final_only(
                     "escalation_decision": "escalate",
                     "confidence": 0.5,
                 }
+                if treatment.get("_auditor_final_review_mode") == "self_generated_concern_ledger":
+                    auditor_final = add_final_ledger_updates_placeholder(
+                        auditor_final,
+                        source_outputs["auditor_initial"],
+                    )
                 if dry_run:
                     write_json(final_output_path, auditor_final)
             events.append({**final_record, "output": auditor_final})

@@ -39,6 +39,8 @@ Answer these before giving your verdict:
 - Could the same conclusion have been reached from admissible evidence alone?
 - What would change your verdict?
 
+{{AUDITOR_INITIAL_REVIEW_REQUIREMENT}}
+
 ## Output Schema
 
 Return JSON with these fields:

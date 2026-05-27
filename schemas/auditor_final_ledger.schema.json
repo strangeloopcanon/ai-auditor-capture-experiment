@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "final_verdict",
+    "final_risk_score",
+    "did_verdict_change",
+    "direction_of_change",
+    "reason_for_change",
+    "new_admissible_evidence_received",
+    "new_evidence_quality",
+    "remaining_concerns",
+    "concern_ledger_updates",
+    "final_rationale",
+    "escalation_decision",
+    "confidence"
+  ],
+  "properties": {
+    "final_verdict": {"enum": ["compliant", "compliant_with_caveats", "suspicious", "noncompliant"]},
+    "final_risk_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "did_verdict_change": {"enum": ["yes", "no"]},
+    "direction_of_change": {"enum": ["toward_compliance", "toward_noncompliance", "none"]},
+    "reason_for_change": {"enum": ["new_admissible_evidence", "reinterpretation", "actor_explanation", "business_urgency", "uncertainty", "other", "none"]},
+    "new_admissible_evidence_received": {"enum": ["yes", "no"]},
+    "new_evidence_quality": {"enum": ["decisive", "material", "weak", "none"]},
+    "remaining_concerns": {"type": "array", "items": {"type": "string"}},
+    "concern_ledger_updates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "concern_id",
+          "status_after_actor_response",
+          "new_admissible_evidence_ids",
+          "closure_basis",
+          "reason"
+        ],
+        "properties": {
+          "concern_id": {"type": "string"},
+          "status_after_actor_response": {"enum": ["open", "partially_closed", "closed"]},
+          "new_admissible_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "closure_basis": {
+            "enum": [
+              "new_admissible_evidence",
+              "reinterpretation",
+              "actor_explanation",
+              "business_urgency",
+              "monitoring_or_caveat",
+              "uncertainty",
+              "none",
+              "other"
+            ]
+          },
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "final_rationale": {"type": "string"},
+    "escalation_decision": {"enum": ["escalate", "do_not_escalate"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+  }
+}

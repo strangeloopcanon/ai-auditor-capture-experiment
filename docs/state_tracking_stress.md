@@ -55,6 +55,21 @@ The best conclusion is:
 
 This is a useful next-step result. It suggests audit capture is partly a state-tracking problem, not only an instruction-following problem.
 
+## Self-generated ledger follow-up
+
+The later self-generated ledger run repeats this question with a more realistic ledger. The auditor creates the ledger at initial review. The actor never sees it. The final auditor either receives and updates that ledger, or gets only the public initial audit.
+
+On the full 150-case state-tracking-stress rerun:
+
+| Arm | PIFC | Overall false compliance | Ledger note |
+| --- | ---: | ---: | --- |
+| Standard final audit | 3/148 = 2.0% | 5/150 = 3.3% | Ledger was created but unavailable at final review |
+| Ledger-updating final audit | 0/148 = 0.0% | 2/150 = 1.3% | Ledger was updated in every continued case |
+
+This supports the state-tracking interpretation. Keeping the auditor's own ledger available at final review blocked observed PIFC in the full stress run. The remaining weakness is closure discipline: the ledger-updating final auditor closed or partly closed a concern without new admissible evidence in 52/148 continued cases.
+
+The concern ledger helps the auditor remember. It does not guarantee the auditor applies the closure rule strictly.
+
 ## Artifacts
 
 - `runs/source_grounded_state_tracking_stress_50/`
@@ -63,6 +78,8 @@ This is a useful next-step result. It suggests audit capture is partly a state-t
 - `runs/source_grounded_state_tracking_stress_50_comparison/`
 - `runs/source_grounded_state_tracking_stress_handoff_vs_accounting_50_comparison/`
 - `runs/source_grounded_state_tracking_stress_handoff_vs_standard_50_comparison/`
+- `runs/source_grounded_self_ledger_stress_150/`
+- `runs/source_grounded_self_ledger_stress_150_comparison/`
 
 ## Reproduce
 

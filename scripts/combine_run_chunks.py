@@ -65,9 +65,9 @@ def main() -> None:
     parser.add_argument("--chunk-run", type=Path, action="append", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--run-label", required=True)
-    parser.add_argument("--cases", required=True)
-    parser.add_argument("--treatments", required=True)
-    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--cases", type=Path, required=True)
+    parser.add_argument("--treatments", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
@@ -85,17 +85,26 @@ def main() -> None:
     _merge_jsonl(args.chunk_run, args.out / "assignment.jsonl", "assignment.jsonl")
     _merge_jsonl(args.chunk_run, args.out / "call_plan.jsonl", "call_plan.jsonl")
     _merge_jsonl(args.chunk_run, args.out / "case_scores.jsonl", "case_scores.jsonl")
+    shutil.copyfile(args.cases, args.out / "selected_cases.jsonl")
 
     write_json(args.out / "metrics.json", aggregate_metrics(transcripts))
+    write_json(
+        args.out / "selection.json",
+        {
+            "source": str(args.cases),
+            "selection_method": "combined_chunk_case_file",
+            "case_count": len(_load_jsonl(args.cases)),
+        },
+    )
     write_json(
         args.out / "run_metadata.json",
         {
             "run_label": args.run_label,
             "execution_mode": "parallel_chunk_combined",
             "chunk_runs": [str(run) for run in args.chunk_run],
-            "cases": args.cases,
-            "treatments": args.treatments,
-            "manifest": args.manifest,
+            "cases": str(args.cases),
+            "treatments": str(args.treatments),
+            "manifest": str(args.manifest),
             "transcript_count": len(transcripts),
         },
     )

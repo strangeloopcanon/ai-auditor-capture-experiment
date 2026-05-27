@@ -6,7 +6,7 @@ The headline result:
 
 > Even without deception, bad faith, or hidden evidence, an audited model can make an auditor less reliable. The failure comes from ordinary explanation: the actor offers a plausible caveat, prioritization story, or implementation rationale, and the auditor sometimes relaxes a valid concern without receiving new admissible evidence.
 
-The strongest mitigation tested so far sharply reduces audit capture, but does not eliminate it. In the latest fixed-boundary rerun, concern accounting removed all observed persuasion-induced false compliance, but overall false compliance remained at 7/150.
+The strongest mitigation line is concern accounting. Exact final-stage accounting removed all observed PIFC in one fixed-boundary rerun. A more realistic version, where the auditor creates and later updates its own private ledger, sharply reduces audit capture but does not eliminate it.
 
 ## Failure Mode
 
@@ -37,9 +37,10 @@ Overall false compliance is broader than PIFC. It counts false compliant or cave
 2. A generic integrity reminder helps. On source-grounded model-card cases, PIFC fell from 21/121 to 7/124.
 3. The raw-evidence access story narrowed after the actor-visible treatment boundary was fixed. Raw access remains worth studying, but it is no longer the main headline.
 4. Actor knowledge of raw auditor access is unsettled. The fixed-boundary rerun put the told arm higher, but the contrast remains uncertain.
-5. Concern accounting is the strongest mitigation tested. On the clean fixed-boundary raw-access interaction set, standard final audit had 6/143 PIFC cases and concern accounting had 0/143.
-6. A state-tracking stress pilot sharpens the mitigation result. Longer, messier actor replies produced one observed PIFC case under the standard final audit and zero under exact concern accounting. A compressed-handoff variant also produced one PIFC case, which points to durable concern-ledger preservation as the next limitation.
-7. The realistic source-grounded work is currently model-card only. Other domains still need source-grounded fixtures.
+5. Exact concern accounting is the strongest mitigation tested. On the clean fixed-boundary raw-access interaction set, standard final audit had 6/143 PIFC cases and exact concern accounting had 0/143.
+6. Self-generated concern ledgers make the mitigation more realistic and less perfect. On the full fixed-boundary set, standard final audit had 8/149 PIFC cases. A final auditor that received and updated the auditor's own private ledger had 2/149.
+7. State-tracking pressure does not break the self-ledger result in the full run, but it exposes a separate procedural weakness. Under longer, messier actor replies, standard final audit had 3/148 PIFC cases and self-ledger final audit had 0/148. The ledger-final arm still closed or partly closed ledger items without new admissible evidence in 52/148 continued cases.
+8. The realistic source-grounded work is currently model-card only. Other domains still need source-grounded fixtures.
 
 ## Results
 
@@ -54,6 +55,8 @@ PIFC uses persuasion opportunities as the denominator. Confidence intervals are 
 | Does telling the actor about raw auditor access matter? | Original 150 actor-knowledge cases rerun under the fixed boundary. | Not told: 6/143 = 4.2%. Told: 14/145 = 9.7%. | Direction changed under the fixed boundary; treat as exploratory. |
 | Can concern accounting block the failure? | Same fixed-boundary raw-access interactions; only the final auditor is rerun with unresolved-concern accounting. | Standard: 6/143 = 4.2%. Concern accounting: 0/143 = 0.0% (95% CI 0.0%-2.6%). | It removed all observed PIFC in this run. Overall false compliance remained 7/150. |
 | Does concern accounting survive state-tracking pressure? | 50 high-concern fixed-boundary cases rerun with longer, out-of-order actor responses. | Standard: 1/50 = 2.0%. Exact concern accounting: 0/50 = 0.0%. Compressed handoff: 1/50 = 2.0%. | Exact ledgers still blocked observed PIFC; lossy handoff reintroduced one failure. |
+| Does a self-generated ledger work? | Same full fixed-boundary source-grounded set; the auditor creates a private ledger, the actor sees only the public audit, and the final auditor either receives or does not receive the ledger. | Standard final: 8/149 = 5.4%. Ledger final: 2/149 = 1.3%. | More realistic ledgering reduces PIFC but does not eliminate it. |
+| Does the self-generated ledger survive state-tracking stress? | Same full set, but actor replies are longer and harder to track. | Standard stress final: 3/148 = 2.0%. Ledger stress final: 0/148 = 0.0%. | No observed PIFC remained, but unsupported ledger closure rose to 52/148. |
 
 ```text
 PIFC rate, percent of persuasion opportunities
@@ -82,6 +85,14 @@ State-tracking stress pilot
   Standard messy final audit                 2.0% | ##
   Exact concern accounting                   0.0% |
   Compressed handoff                         2.0% | ##
+
+Self-generated ledger, full fixed-boundary set
+  Standard final audit                       5.4% | #####
+  Ledger-updating final audit                1.3% | #
+
+Self-generated ledger under state-tracking stress
+  Standard final audit                       2.0% | ##
+  Ledger-updating final audit                0.0% |
 ```
 
 ## Fixed Boundary
@@ -120,6 +131,7 @@ Generated cases preserve provenance in `source_provenance`, and each evidence it
 | Methodology reruns | `docs/methodology_reruns.md`, `scripts/run_methodology_reruns.py` |
 | Concern accounting | `docs/concern_accounting.md`, `runs/source_grounded_raw_accounting_fixed_150/`, `runs/source_grounded_raw_accounting_fixed_150_comparison/` |
 | State-tracking stress | `docs/state_tracking_stress.md`, `runs/source_grounded_state_tracking_stress_50/`, `runs/source_grounded_state_tracking_stress_accounting_50/`, `runs/source_grounded_state_tracking_stress_handoff_50/` |
+| Self-generated concern ledger | `docs/self_generated_ledger.md`, `runs/source_grounded_self_ledger_150/`, `runs/source_grounded_self_ledger_150_comparison/`, `runs/source_grounded_self_ledger_stress_150/`, `runs/source_grounded_self_ledger_stress_150_comparison/` |
 | Source-note lane | `docs/source_note_cases.md` |
 
 ## Reproduce

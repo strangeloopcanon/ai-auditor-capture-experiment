@@ -6,7 +6,11 @@ from auditor_capture.case_generation import generate_cases
 from auditor_capture.orchestrator import (
     actor_response_requirement_text,
     auditor_final_review_requirement_text,
+    auditor_final_schema_path,
+    auditor_initial_review_requirement_text,
+    auditor_initial_schema_path,
     final_audit_context,
+    public_auditor_initial_report,
     response_context,
     treatment_context_for_actor,
 )
@@ -168,6 +172,84 @@ class TreatmentContextTests(unittest.TestCase):
 
         self.assertIn("compressed handoff", text)
         self.assertIn("incomplete state", text)
+
+    def test_self_ledger_treatment_adds_initial_requirement(self) -> None:
+        treatment = {"_auditor_initial_review_mode": "self_generated_concern_ledger"}
+
+        text = auditor_initial_review_requirement_text(treatment)
+
+        self.assertIn("private `concern_ledger`", text)
+        self.assertIn("Actor will not", text)
+
+    def test_self_ledger_treatment_selects_ledger_schemas(self) -> None:
+        treatment = {
+            "_auditor_initial_review_mode": "self_generated_concern_ledger",
+            "_auditor_final_review_mode": "self_generated_concern_ledger",
+        }
+
+        self.assertEqual(
+            auditor_initial_schema_path(treatment).name,
+            "auditor_initial_ledger.schema.json",
+        )
+        self.assertEqual(
+            auditor_final_schema_path(treatment).name,
+            "auditor_final_ledger.schema.json",
+        )
+
+    def test_actor_visible_report_strips_private_ledger(self) -> None:
+        case = generate_cases(1)[0]
+        treatment = {
+            "persuasion": "argument_only",
+            "actor_visibility": "full_auditor_rationale",
+            "actor_auditor_access_disclosure": "not_disclosed",
+            "relationship": "one_shot",
+            "backcheck": "no_explicit_backcheck",
+        }
+        auditor_initial = {
+            "initial_verdict": "suspicious",
+            "specific_concerns": ["concern"],
+            "concern_ledger": [{"concern_id": "C1"}],
+        }
+
+        context = response_context(case, treatment, {}, auditor_initial)
+
+        self.assertIn("specific_concerns", context["visible_initial_audit"])
+        self.assertNotIn("concern_ledger", context["visible_initial_audit"])
+        self.assertNotIn("concern_ledger", public_auditor_initial_report(auditor_initial))
+
+    def test_final_context_can_hide_or_include_private_ledger(self) -> None:
+        case = generate_cases(1)[0]
+        actor_output = {"cited_evidence_ids": [], "audit_packet_summary": "summary"}
+        auditor_initial = {
+            "initial_verdict": "suspicious",
+            "specific_concerns": ["concern"],
+            "concern_ledger": [{"concern_id": "C1"}],
+        }
+        actor_response = {"argument_summary": "response"}
+        base_treatment = {
+            "evidence_access": "raw_evidence_access",
+            "auditor_precommitment": "no_preregistration",
+            "backcheck": "no_explicit_backcheck",
+            "relationship": "one_shot",
+        }
+
+        hidden = final_audit_context(
+            case,
+            {**base_treatment, "_auditor_final_context_mode": "full_initial_report_without_ledger"},
+            actor_output,
+            auditor_initial,
+            actor_response,
+        )
+        included = final_audit_context(
+            case,
+            base_treatment,
+            actor_output,
+            auditor_initial,
+            actor_response,
+        )
+
+        self.assertNotIn("concern_ledger", hidden["initial_audit_report"])
+        self.assertIn("concern_ledger", included["initial_audit_report"])
 
 
 if __name__ == "__main__":

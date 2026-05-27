@@ -24,6 +24,49 @@ def event_outputs(transcript: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {event["stage"]: event["output"] for event in transcript["events"]}
 
 
+def median(values: list[int]) -> int | None:
+    if not values:
+        return None
+    values = sorted(values)
+    return values[len(values) // 2]
+
+
+def ledger_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    ledger_rows = [row for row in rows if row["ledger_created"]]
+    update_rows = [row for row in ledger_rows if row["continued"]]
+    rows_with_updates = [row for row in rows if row["ledger_update_count"] > 0]
+    continued = [row for row in rows if row["continued"]]
+    item_counts = [row["ledger_item_count"] for row in ledger_rows]
+    return {
+        "ledger_created": rate_summary(len(ledger_rows), len(rows)),
+        "ledger_item_count": {
+            "min": min(item_counts) if item_counts else None,
+            "median": median(item_counts),
+            "max": max(item_counts) if item_counts else None,
+        },
+        "ledger_update_coverage": rate_summary(
+            sum(row["ledger_update_coverage"] for row in update_rows),
+            len(update_rows),
+        ),
+        "unsupported_ledger_closure": rate_summary(
+            sum(row["unsupported_ledger_closure"] for row in rows_with_updates),
+            len(rows_with_updates),
+        ),
+        "ledger_escape_pifc": rate_summary(
+            sum(row["ledger_escape_pifc"] for row in rows),
+            len(continued),
+        ),
+        "ledger_omission_pifc": rate_summary(
+            sum(row["ledger_omission_pifc"] for row in rows),
+            len(continued),
+        ),
+        "ledger_lost_pifc": rate_summary(
+            sum(row["ledger_lost_pifc"] for row in rows),
+            len(continued),
+        ),
+    }
+
+
 def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
     rows = []
     for transcript in transcripts:
@@ -32,6 +75,10 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
         final = events.get("auditor_final", events["auditor_initial"]).get("final_verdict", initial)
         scoring = transcript["scoring_result"]
         actor_response = events.get("actor_response")
+        final_output = events.get("auditor_final", {})
+        ledger_updates = final_output.get("concern_ledger_updates", [])
+        if not isinstance(ledger_updates, list):
+            ledger_updates = []
         rows.append(
             {
                 "case_id": transcript["case_id"],
@@ -49,6 +96,14 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
                 "new_admissible": bool(scoring["actor_response_added_new_admissible_evidence"]),
                 "reason_for_change": events.get("auditor_final", {}).get("reason_for_change", "none"),
                 "new_admissible_reported": events.get("auditor_final", {}).get("new_admissible_evidence_received", "none"),
+                "ledger_created": bool(scoring.get("ledger_created")),
+                "ledger_item_count": int(scoring.get("ledger_item_count", 0)),
+                "ledger_update_count": len(ledger_updates),
+                "ledger_update_coverage": bool(scoring.get("ledger_update_coverage")),
+                "unsupported_ledger_closure": bool(scoring.get("unsupported_ledger_closure")),
+                "ledger_escape_pifc": bool(scoring.get("ledger_escape_pifc")),
+                "ledger_omission_pifc": bool(scoring.get("ledger_omission_pifc")),
+                "ledger_lost_pifc": bool(scoring.get("ledger_lost_pifc")),
             }
         )
 
@@ -66,6 +121,7 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
             "pifc": rate_summary(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
             "false_compliance": rate_summary(sum(row["false_compliance"] for row in subset), len(subset)),
             "final_verdict_counts": dict(Counter(row["final"] for row in subset)),
+            "ledger": ledger_summary(subset),
         }
 
     by_domain: dict[str, dict[str, Any]] = {}
@@ -78,6 +134,7 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
             "pifc": rate_summary(sum(row["pifc"] for row in subset), len(continued_subset) or len(subset)),
             "false_compliance": rate_summary(sum(row["false_compliance"] for row in subset), len(subset)),
             "final_verdict_counts": dict(Counter(row["final"] for row in subset)),
+            "ledger": ledger_summary(subset),
         }
 
     return {
@@ -95,7 +152,12 @@ def analyze(transcripts: list[dict[str, Any]]) -> dict[str, Any]:
         "no_response_false_compliance": rate_summary(sum(row["false_compliance"] for row in no_response), len(no_response)),
         "by_treatment": by_treatment,
         "by_domain": by_domain,
+        "ledger": ledger_summary(rows),
         "pifc_cases": [row for row in rows if row["pifc"]],
+        "ledger_escape_pifc_cases": [row for row in rows if row["ledger_escape_pifc"]],
+        "unsupported_ledger_closure_cases": [
+            row for row in rows if row["unsupported_ledger_closure"]
+        ],
     }
 
 
@@ -182,6 +244,52 @@ def markdown_report(run_dir: Path, summary: dict[str, Any]) -> str:
             )
     else:
         lines.append("- None.")
+    if summary["ledger"]["ledger_created"]["count"]:
+        ledger = summary["ledger"]
+        lines.extend(
+            [
+                "",
+                "## Ledger Metrics",
+                "",
+                (
+                    f"- Ledger created: {ledger['ledger_created']['count']}/"
+                    f"{ledger['ledger_created']['n']} "
+                    f"({format_rate_with_ci(ledger['ledger_created'])})."
+                ),
+                (
+                    f"- Ledger item count: min {ledger['ledger_item_count']['min']}, "
+                    f"median {ledger['ledger_item_count']['median']}, "
+                    f"max {ledger['ledger_item_count']['max']}."
+                ),
+                (
+                    f"- Ledger update coverage: {ledger['ledger_update_coverage']['count']}/"
+                    f"{ledger['ledger_update_coverage']['n']} "
+                    f"({format_rate_with_ci(ledger['ledger_update_coverage'])})."
+                ),
+                (
+                    f"- Unsupported ledger closure: "
+                    f"{ledger['unsupported_ledger_closure']['count']}/"
+                    f"{ledger['unsupported_ledger_closure']['n']} "
+                    f"({format_rate_with_ci(ledger['unsupported_ledger_closure'])})."
+                ),
+                (
+                    f"- Ledger escape PIFC: {ledger['ledger_escape_pifc']['count']}/"
+                    f"{ledger['ledger_escape_pifc']['n']} "
+                    f"({format_rate_with_ci(ledger['ledger_escape_pifc'])})."
+                ),
+                (
+                    f"- Ledger omission PIFC: {ledger['ledger_omission_pifc']['count']}/"
+                    f"{ledger['ledger_omission_pifc']['n']} "
+                    f"({format_rate_with_ci(ledger['ledger_omission_pifc'])})."
+                ),
+                (
+                    f"- Ledger lost PIFC: {ledger['ledger_lost_pifc']['count']}/"
+                    f"{ledger['ledger_lost_pifc']['n']} "
+                    f"({format_rate_with_ci(ledger['ledger_lost_pifc'])})."
+                ),
+                "",
+            ]
+        )
     lines.append("")
     return "\n".join(lines)
 

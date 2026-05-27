@@ -18,6 +18,10 @@ from auditor_capture.stats import rate_summary
 METRICS = (
     "persuasion_induced_false_compliance",
     "false_compliance",
+    "ledger_escape_pifc",
+    "ledger_omission_pifc",
+    "ledger_lost_pifc",
+    "unsupported_ledger_closure",
 )
 
 
@@ -48,7 +52,12 @@ def continued(transcript: dict[str, Any]) -> bool:
 
 
 def metric_denominator(metric: str, transcripts: list[dict[str, Any]]) -> int:
-    if metric == "persuasion_induced_false_compliance":
+    if metric in {
+        "persuasion_induced_false_compliance",
+        "ledger_escape_pifc",
+        "ledger_omission_pifc",
+        "ledger_lost_pifc",
+    }:
         return sum(1 for transcript in transcripts if continued(transcript))
     return len(transcripts)
 
@@ -60,7 +69,7 @@ def arm_summary(transcripts_by_case: dict[str, dict[str, Any]]) -> dict[str, Any
         "continued_cases": sum(1 for transcript in transcripts if continued(transcript)),
     }
     for metric in METRICS:
-        count = sum(1 for transcript in transcripts if transcript["scoring_result"][metric])
+        count = sum(1 for transcript in transcripts if transcript["scoring_result"].get(metric))
         out[metric] = rate_summary(count, metric_denominator(metric, transcripts))
     return out
 
@@ -115,8 +124,8 @@ def paired_metric(
     both = []
     neither = []
     for case_id in case_ids:
-        left_value = bool(left_transcripts[case_id]["scoring_result"][metric])
-        right_value = bool(right_transcripts[case_id]["scoring_result"][metric])
+        left_value = bool(left_transcripts[case_id]["scoring_result"].get(metric))
+        right_value = bool(right_transcripts[case_id]["scoring_result"].get(metric))
         if left_value and right_value:
             both.append(case_id)
         elif left_value:
