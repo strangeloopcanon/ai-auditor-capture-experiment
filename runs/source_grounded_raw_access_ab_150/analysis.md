@@ -20,14 +20,14 @@ No-response false compliance: 0/0 (0.0%, Wilson 95% CI 0.0%-0.0%).
 
 ## By Treatment
 
-| Treatment | Cases | Continued | PIFC | Rate | Wilson 95% CI |
+| Treatment | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |
 |---|---:|---:|---:|---:|---:|
 | `H3_raw_hidden_access_integrity` | 150 | 145 | 16/145 | 11.0% | 6.9%-17.2% |
 | `H4_raw_known_access_integrity` | 150 | 147 | 8/147 | 5.4% | 2.8%-10.4% |
 
 ## By Domain
 
-| Domain | Cases | Continued | PIFC | Rate | Wilson 95% CI |
+| Domain | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |
 |---|---:|---:|---:|---:|---:|
 | `model_card_disclosure` | 300 | 292 | 24/292 | 8.2% | 5.6%-11.9% |
 

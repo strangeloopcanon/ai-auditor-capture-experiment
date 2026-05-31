@@ -60,7 +60,7 @@ The short version: a complete supplied checklist works in the observed fixed-bou
 
 ## Results
 
-PIFC uses persuasion opportunities as the denominator. Confidence intervals are Wilson 95% intervals.
+PIFC uses continued persuasion opportunities as the denominator, not the number of base cases or total transcripts. A run starts from base cases, expands them across treatment arms into case-condition transcripts, then counts PIFC over transcripts where the actor actually responded and the final auditor reran. Confidence intervals are Wilson 95% intervals.
 
 | Question | Cleanest comparison | PIFC result | Reading |
 | --- | --- | ---: | --- |

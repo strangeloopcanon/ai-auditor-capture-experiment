@@ -208,7 +208,7 @@ def markdown_report(run_dir: Path, summary: dict[str, Any]) -> str:
         "",
         "## By Treatment",
         "",
-        "| Treatment | Cases | Continued | PIFC | Rate | Wilson 95% CI |",
+        "| Treatment | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |",
         "|---|---:|---:|---:|---:|---:|",
     ]
     for treatment, data in summary["by_treatment"].items():
@@ -223,7 +223,7 @@ def markdown_report(run_dir: Path, summary: dict[str, Any]) -> str:
             "",
             "## By Domain",
             "",
-            "| Domain | Cases | Continued | PIFC | Rate | Wilson 95% CI |",
+            "| Domain | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |",
             "|---|---:|---:|---:|---:|---:|",
         ]
     )

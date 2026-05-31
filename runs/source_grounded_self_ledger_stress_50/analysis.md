@@ -20,14 +20,14 @@ No-response false compliance: 0/0 (0.0%, Wilson 95% CI 0.0%-0.0%).
 
 ## By Treatment
 
-| Treatment | Cases | Continued | PIFC | Rate | Wilson 95% CI |
+| Treatment | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |
 |---|---:|---:|---:|---:|---:|
 | `SL2_self_ledger_stress_standard_final` | 50 | 50 | 0/50 | 0.0% | 0.0%-7.1% |
 | `SL3_self_ledger_stress_final` | 50 | 50 | 0/50 | 0.0% | 0.0%-7.1% |
 
 ## By Domain
 
-| Domain | Cases | Continued | PIFC | Rate | Wilson 95% CI |
+| Domain | Transcripts | PIFC denom | PIFC | Rate | Wilson 95% CI |
 |---|---:|---:|---:|---:|---:|
 | `model_card_disclosure` | 100 | 100 | 0/100 | 0.0% | 0.0%-3.7% |
 

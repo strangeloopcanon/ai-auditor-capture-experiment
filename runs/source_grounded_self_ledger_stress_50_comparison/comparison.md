@@ -4,7 +4,7 @@ Self-generated concern ledger under state-tracking stress
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Self-ledger stress workflow, standard final audit | `SL2_self_ledger_stress_standard_final` | 50 | 50 | 0/50 = 0.0% (95% CI 0.0%-7.1%) | 0/50 = 0.0% (95% CI 0.0%-7.1%) |
 | Self-ledger stress workflow, ledger-updating final audit | `SL3_self_ledger_stress_final` | 50 | 50 | 0/50 = 0.0% (95% CI 0.0%-7.1%) | 0/50 = 0.0% (95% CI 0.0%-7.1%) |

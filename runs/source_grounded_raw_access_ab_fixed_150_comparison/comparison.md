@@ -4,7 +4,7 @@ Phase 4 actor told vs not told after actor-visible treatment boundary fix
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Raw access not told | `H3_raw_hidden_access_integrity` | 150 | 143 | 6/143 = 4.2% (95% CI 1.9%-8.9%) | 13/150 = 8.7% (95% CI 5.1%-14.3%) |
 | Raw access told | `H4_raw_known_access_integrity` | 150 | 145 | 14/145 = 9.7% (95% CI 5.8%-15.6%) | 19/150 = 12.7% (95% CI 8.3%-18.9%) |

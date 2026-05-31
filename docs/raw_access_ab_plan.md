@@ -19,10 +19,10 @@ The design keeps the source-grounded model-card lane, integrity reminder, no-new
 | 50 paired cases | H4 raw / told raw | 1/48 = 2.1% (95% CI 0.4%-10.9%) | 3/50 = 6.0% (95% CI 2.1%-16.2%) |
 | 75 paired cases | H3 raw / not disclosed | 9/74 = 12.2% (95% CI 6.5%-21.5%) | 10/75 = 13.3% (95% CI 7.4%-22.8%) |
 | 75 paired cases | H4 raw / told raw | 2/73 = 2.7% (95% CI 0.8%-9.5%) | 4/75 = 5.3% (95% CI 2.1%-12.9%) |
-| 150 paired cases, initial boundary | H3 raw / not disclosed | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
-| 150 paired cases, initial boundary | H4 raw / told raw | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
-| 150 paired cases, fixed boundary | H3 raw / not disclosed | 6/143 = 4.2% (95% CI 1.9%-8.9%) | 13/150 = 8.7% (95% CI 5.1%-14.3%) |
-| 150 paired cases, fixed boundary | H4 raw / told raw | 14/145 = 9.7% (95% CI 5.8%-15.6%) | 19/150 = 12.7% (95% CI 8.3%-18.9%) |
+| 150 base cases, initial boundary | H3 raw / not disclosed | 16/145 = 11.0% (95% CI 6.9%-17.2%) | 21/150 = 14.0% (95% CI 9.3%-20.5%) |
+| 150 base cases, initial boundary | H4 raw / told raw | 8/147 = 5.4% (95% CI 2.8%-10.4%) | 11/150 = 7.3% (95% CI 4.1%-12.7%) |
+| 150 base cases, fixed boundary | H3 raw / not disclosed | 6/143 = 4.2% (95% CI 1.9%-8.9%) | 13/150 = 8.7% (95% CI 5.1%-14.3%) |
+| 150 base cases, fixed boundary | H4 raw / told raw | 14/145 = 9.7% (95% CI 5.8%-15.6%) | 19/150 = 12.7% (95% CI 8.3%-18.9%) |
 
 ## Fixed-Boundary Paired Contrast
 

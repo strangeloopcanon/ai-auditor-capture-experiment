@@ -167,7 +167,7 @@ def markdown(result: dict[str, Any]) -> str:
         "",
         "## Arm Results",
         "",
-        "| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |",
+        "| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |",
         "| --- | --- | ---: | ---: | ---: | ---: |",
         (
             f"| {left['label']} | `{left['treatment_id']}` | {left['summary']['cases']} | "

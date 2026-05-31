@@ -27,11 +27,13 @@ For `all_conditions`, the seed only changes execution order, because every case 
 Per repeat:
 
 ```text
-25 cases x 6 integrity conditions = 150 transcripts
+25 base cases x 6 integrity conditions = 150 transcripts
 1 no-response condition x 25 cases x 2 calls = 50 calls
 5 response conditions x 25 cases x 4 calls = 500 calls
 Maximum per repeat = 550 Codex calls
 ```
+
+The response-condition count is a call budget, not necessarily the PIFC denominator. PIFC uses continued persuasion opportunities, so selective continuation can reduce the denominator below the maximum 125 response-condition slots.
 
 Repeated budgets:
 

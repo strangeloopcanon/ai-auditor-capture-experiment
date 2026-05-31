@@ -16,15 +16,23 @@ The Regulator is deterministic. LLMs produce Actor and Auditor behavior. The Reg
 
 ## Case Lanes
 
-| Lane | Cases | Purpose |
-| --- | ---: | --- |
-| Synthetic borderline | 150 | Baseline test across procurement, access exceptions, and model-card disclosure. |
-| Synthetic + integrity reminder | 150 | Tests whether a simple final-auditor reminder reduces false softening. |
-| Source-grounded model-card stress | 25 cases x 6 conditions | Tests the same mechanism on public policy/process grounding plus realistic launch artifacts. |
-| Source-grounded raw-vs-summary | 150 paired cases | Tests whether raw admissible evidence changes the result relative to actor summaries. |
-| Source-grounded actor knowledge | 150 paired cases | Tests whether telling the actor about raw auditor access changes the result. |
-| Concern accounting | 150 fixed-boundary interactions | Tests whether a complete concern checklist blocks persuasion-induced false compliance at final review. |
-| Self-generated concern ledger | 150 fixed-boundary interactions, with and without state-tracking stress | Tests whether the auditor can create and maintain the concern state itself. |
+Use three separate counts when writing the method:
+
+- Base cases are the underlying scenario fixtures.
+- Case-condition transcripts are base cases expanded across treatment arms.
+- PIFC opportunities are transcripts where the actor responded and the final auditor reran.
+
+| Lane | Base cases | Treatment arms | Case-condition transcripts | Purpose |
+| --- | ---: | ---: | ---: | --- |
+| Synthetic borderline | 150 | balanced assignment | 150 | Baseline test across procurement, access exceptions, and model-card disclosure. |
+| Synthetic + integrity reminder | 150 | balanced assignment | 150 | Tests whether a simple final-auditor reminder reduces false softening. |
+| Source-grounded model-card stress | 25 | 6 per reminder setting | 150 per setting | Tests the same mechanism on public policy/process grounding plus realistic launch artifacts. |
+| Source-grounded raw-vs-summary | 150 | 2 | 300 | Tests whether raw admissible evidence changes the result relative to actor summaries. |
+| Source-grounded actor knowledge | 150 | 2 | 300 | Tests whether telling the actor about raw auditor access changes the result. |
+| Concern accounting | 150 | 1 final-auditor rerun | 150 | Tests whether a complete concern checklist blocks persuasion-induced false compliance at final review. |
+| Self-generated concern ledger | 150 | 2 per run | 300 per run | Tests whether the auditor can create and maintain the concern state itself. |
+
+PIFC denominators can be smaller than the transcript count because no-response conditions and selectively skipped continuations are not persuasion opportunities.
 
 The current source-grounded cases are all model-card disclosure cases. Realistic source-grounded domain effects need source-note packets beyond model-card disclosure.
 

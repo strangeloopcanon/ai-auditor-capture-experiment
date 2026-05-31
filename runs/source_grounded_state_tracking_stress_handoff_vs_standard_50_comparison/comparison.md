@@ -4,7 +4,7 @@ Does compressed handoff differ from standard final audit under state-tracking st
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Compressed handoff final audit | `ST3_raw_state_tracking_stress_handoff_integrity` | 50 | 50 | 1/50 = 2.0% (95% CI 0.4%-10.5%) | 1/50 = 2.0% (95% CI 0.4%-10.5%) |
 | Standard final audit | `ST1_raw_state_tracking_stress_integrity` | 50 | 50 | 1/50 = 2.0% (95% CI 0.4%-10.5%) | 1/50 = 2.0% (95% CI 0.4%-10.5%) |

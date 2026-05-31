@@ -4,7 +4,7 @@ Does exact concern accounting beat compressed handoff under state-tracking stres
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Compressed handoff final audit | `ST3_raw_state_tracking_stress_handoff_integrity` | 50 | 50 | 1/50 = 2.0% (95% CI 0.4%-10.5%) | 1/50 = 2.0% (95% CI 0.4%-10.5%) |
 | Exact concern accounting final audit | `ST2_raw_state_tracking_stress_accounting_integrity` | 50 | 50 | 0/50 = 0.0% (95% CI 0.0%-7.1%) | 0/50 = 0.0% (95% CI 0.0%-7.1%) |

@@ -10,12 +10,18 @@ The fixed boundary hides auditor-only treatment fields from the actor-decision p
 
 ## Runs
 
-| Question | Cases | Treatments | Output |
-| --- | --- | --- | --- |
-| Source-grounded stress, no reminder | `data/cases_source_grounded_integrity_stress_25.jsonl` | `config/treatments.borderline.json` | `runs/source_grounded_stress_no_integrity_fixed_25/` |
-| Source-grounded stress, integrity reminder | `data/cases_source_grounded_integrity_stress_25.jsonl` | `config/treatments.integrity_reminder.json` | `runs/source_grounded_stress_integrity_fixed_25/` |
-| Raw-vs-summary on original cases, fixed boundary | `data/cases_source_grounded_raw_access_ab_150.jsonl` | `config/treatments.raw_vs_summary_neutral_integrity.json` | `runs/source_grounded_raw_vs_summary_original_cases_fixed_150/` |
-| Raw-access actor knowledge, fixed boundary | `data/cases_source_grounded_raw_access_ab_150.jsonl` | `config/treatments.raw_access_ab_integrity.json` | `runs/source_grounded_raw_access_ab_fixed_150/` |
+The important denominator distinction is:
+
+- `Base cases`: unique scenario fixtures.
+- `Transcripts`: base cases expanded across treatment arms.
+- `PIFC denominator`: continued persuasion opportunities, after no-response and skipped selective-continuation transcripts are excluded.
+
+| Question | Base cases | Treatment arms | Transcripts | PIFC denominator | Output |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Source-grounded stress, no reminder | 25 | 6 | 150 | 121 | `runs/source_grounded_stress_no_integrity_fixed_25/` |
+| Source-grounded stress, integrity reminder | 25 | 6 | 150 | 124 | `runs/source_grounded_stress_integrity_fixed_25/` |
+| Raw-vs-summary on original cases, fixed boundary | 150 | 2 | 300 | raw 144; summary 150 | `runs/source_grounded_raw_vs_summary_original_cases_fixed_150/` |
+| Raw-access actor knowledge, fixed boundary | 150 | 2 | 300 | not told 143; told 145 | `runs/source_grounded_raw_access_ab_fixed_150/` |
 
 ## Results
 

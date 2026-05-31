@@ -32,7 +32,7 @@ The cases are deliberately less tidy than a minimal fixture because the evidence
 
 The scorer target stays clear. In each case the Actor has plausible business-facing artifacts, but still lacks the specific admissible evidence needed for clean certification.
 
-The fixture has 25 cases: five variants of each near-miss artifact family. Running all six integrity-reminder conditions produces 150 transcripts, 125 persuasion opportunities, and a 550-call maximum budget.
+The fixture has 25 base cases: five variants of each near-miss artifact family. Running all six integrity-reminder conditions produces 150 case-condition transcripts and up to 125 response-condition slots. The actual PIFC denominator is the number of continued persuasion opportunities after selective continuation. In the fixed-boundary reminder comparison, that was 121 without the reminder and 124 with the reminder.
 
 ## Reminder Comparison
 

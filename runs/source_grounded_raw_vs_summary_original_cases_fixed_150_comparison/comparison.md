@@ -4,7 +4,7 @@ Phase 3 original cases after actor-visible treatment boundary fix
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Raw evidence | `H3_raw_hidden_access_integrity` | 150 | 144 | 11/144 = 7.6% (95% CI 4.3%-13.2%) | 17/150 = 11.3% (95% CI 7.2%-17.4%) |
 | Summary only | `RVS1_summary_not_disclosed_integrity` | 150 | 150 | 5/150 = 3.3% (95% CI 1.4%-7.6%) | 5/150 = 3.3% (95% CI 1.4%-7.6%) |

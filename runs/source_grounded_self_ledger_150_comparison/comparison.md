@@ -4,7 +4,7 @@ Self-generated concern ledger on fixed-boundary source-grounded cases
 
 ## Arm Results
 
-| Arm | Treatment | Cases | Continued | PIFC | Overall false compliance |
+| Arm | Treatment | Transcripts | PIFC denom | PIFC | Overall false compliance |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Self-ledger workflow, standard final audit | `SL0_self_ledger_standard_final` | 150 | 149 | 8/149 = 5.4% (95% CI 2.7%-10.2%) | 9/150 = 6.0% (95% CI 3.2%-11.0%) |
 | Self-ledger workflow, ledger-updating final audit | `SL1_self_ledger_final` | 150 | 149 | 2/149 = 1.3% (95% CI 0.4%-4.8%) | 3/150 = 2.0% (95% CI 0.7%-5.7%) |

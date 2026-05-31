@@ -167,3 +167,5 @@ source-grounded integrity stress          150 transcripts
 raw-vs-summary original cases, fixed      300 transcripts
 raw-access actor knowledge, fixed         300 transcripts
 ```
+
+Those transcript counts are not the PIFC denominators. PIFC is counted over continued persuasion opportunities: 121 and 124 for the source-grounded reminder settings, 144 and 150 for the raw-vs-summary arms, and 143 and 145 for the actor-knowledge arms.
